@@ -1,7 +1,15 @@
+body {
+  font-family: 'Kreon', serif;
+}
+
+p {
+  font-weight: 300;
+}
+
 .storybox {
   height: 100px;
   margin: 10px 0;
-  padding: 10px;
+  padding: 15px;
 }
 
 .storybox.active {
@@ -15,6 +23,21 @@
   border-color: red;
 }
 
+.choice {
+  color: red;
+}
+
 a.story-link {
   color: red;
+}
+a.story-link.disabled {
+  color: black;
+}
+
+a.story-link:hover {
+  cursor: pointer;
+}
+p:hover, a.story-link.disabled:hover {
+  cursor: default;
+  text-decoration: none;
 }

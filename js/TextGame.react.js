@@ -2,9 +2,10 @@ var React = require('react');
 
 var Storybox = require('./Storybox.react.js');
 var StoryMixin = require('./StoryMixin.react.js');
+var VisualMixin = require('./VisualMixin.react.js');
 
 var TextGame = React.createClass({
-  mixins: [StoryMixin],
+  mixins: [StoryMixin, VisualMixin],
 
   getInitialState: function() {
     return {
