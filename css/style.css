@@ -6,6 +6,7 @@ p {
   font-weight: 300;
 }
 
+/* Story box styles */
 .storybox {
   height: 100px;
   margin: 10px 0;
@@ -15,7 +16,7 @@ p {
 .storybox.active {
   height: 200px;
   border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .storybox.dead {
@@ -23,6 +24,7 @@ p {
   border-color: red;
 }
 
+/* Link and choice colors */
 .choice {
   color: red;
 }
@@ -40,4 +42,21 @@ a.story-link:hover {
 p:hover, a.story-link.disabled:hover {
   cursor: default;
   text-decoration: none;
+}
+
+/* Content fade animations */
+.content-enter {
+  opacity: 0.01;
+}
+.content-enter.content-enter-active {
+  opacity: 1;
+  transition: opacity .2s ease-in;
+}
+
+.content-leave {
+  opacity: 1;
+}
+.content-leave.content-leave-active {
+  opacity: 0.01;
+  transition: opacity .1s ease-in;
 }

@@ -1,12 +1,15 @@
-var React = require('react');
+var React = require('react/addons');
+var TransitionGroup = React.addons.CSSTransitionGroup;
 
-global.$ = global.jQuery = require('jquery');
 var cx = require('classnames');
+var TimerMixin = require('react-timer-mixin');
 
 /**
  * Each storybox is a physical box corresponding to the POV of a single clone.
  */
 var Storybox = React.createClass({
+  mixins: [TimerMixin],
+
   propTypes: {
     key: React.PropTypes.number,
   },
@@ -29,9 +32,15 @@ var Storybox = React.createClass({
   },
 
   setText: function(value, append) {
-    var content = (append === true) ? this.state.content : [];
-    content.push(value);
-    this.setState({content: content});
+    var content;
+    if (append === true) {
+      content = this.state.content;
+      content.push(value);
+      this.setState({content: content});
+    } else {
+      this.clearText();
+      this.setTimeout(() => this.setState({content: [value]}), 250);
+    }
   },
 
   appendText: function(value) {
@@ -49,7 +58,9 @@ var Storybox = React.createClass({
           'active': this.state.active,
           'dead': !this.state.alive,
         })}>
-          {content}
+          <TransitionGroup transitionName="content">
+            {content}
+          </TransitionGroup>
         </div>
       </div>
     );

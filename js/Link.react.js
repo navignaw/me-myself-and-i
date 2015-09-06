@@ -2,6 +2,7 @@ var React = require('react');
 
 var cx = require('classnames');
 
+var $ = require('jquery');
 require('./helper.js');
 
 var Link = React.createClass({
