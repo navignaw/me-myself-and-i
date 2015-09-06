@@ -1,5 +1,6 @@
 var React = require('react');
 
+global.$ = global.jQuery = require('jquery');
 var cx = require('classnames');
 
 /**
@@ -14,7 +15,8 @@ var Storybox = React.createClass({
     return {
       active: false,
       alive: true,
-      text: '',
+      backgroundImage: null,
+      content: [],
     };
   },
 
@@ -22,18 +24,32 @@ var Storybox = React.createClass({
     this.setState({active: value});
   },
 
-  setText: function(value) {
-    this.setState({text: value});
+  clearText: function() {
+    this.setState({content: []});
+  },
+
+  setText: function(value, append) {
+    var content = (append === true) ? this.state.content : [];
+    content.push(value);
+    this.setState({content: content});
+  },
+
+  appendText: function(value) {
+    this.setText(value, true);
   },
 
   render: function() {
+    var content = this.state.content.map((Elem, index) =>
+      React.cloneElement(Elem, {key: index})
+    );
+
     return (
       <div className="col-md-4 col-sm-6 col-xs-12">
         <div className={cx('storybox', {
           'active': this.state.active,
           'dead': !this.state.alive,
         })}>
-          <p>{this.state.active && this.state.text}</p>
+          {content}
         </div>
       </div>
     );

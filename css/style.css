@@ -1,7 +1,7 @@
 .storybox {
   height: 100px;
   margin: 10px 0;
-  text-align: center;
+  padding: 10px;
 }
 
 .storybox.active {
@@ -13,4 +13,8 @@
 .storybox.dead {
   background-color: red; /* find better color */
   border-color: red;
+}
+
+a.story-link {
+  color: red;
 }

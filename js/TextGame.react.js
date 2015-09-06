@@ -1,16 +1,22 @@
 var React = require('react');
 
 var Storybox = require('./Storybox.react.js');
+var StoryMixin = require('./StoryMixin.react.js');
 
 var TextGame = React.createClass({
+  mixins: [StoryMixin],
+
   getInitialState: function() {
     return {
+      gender: null,
+      faveCategory: null,
+      faveItem: null,
     };
   },
 
   componentDidMount: function() {
     this.refs.storybox4.setActive(true);
-    this.refs.storybox4.setText('hello mate');
+    this.refs.storybox4.appendText(this.storyText(4, 'menu'));
   },
 
   render: function() {
