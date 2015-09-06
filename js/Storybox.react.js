@@ -24,7 +24,10 @@ var Storybox = React.createClass({
   },
 
   setActive: function(value) {
-    this.setState({active: value});
+    this.setState({active: value === undefined ? true : value});
+    if (value === false) {
+      this.clearText();
+    }
   },
 
   clearText: function() {

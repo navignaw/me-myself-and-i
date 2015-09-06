@@ -11,12 +11,14 @@ p {
   height: 100px;
   margin: 10px 0;
   padding: 15px;
+  border: none;
+  border-radius: 8px;
+  transition: border 200ms ease-in;
 }
 
 .storybox.active {
   height: 200px;
   border: 1px solid black;
-  border-radius: 8px;
 }
 
 .storybox.dead {
@@ -50,7 +52,7 @@ p:hover, a.story-link.disabled:hover {
 }
 .content-enter.content-enter-active {
   opacity: 1;
-  transition: opacity .2s ease-in;
+  transition: opacity 200ms ease-in;
 }
 
 .content-leave {
@@ -58,5 +60,5 @@ p:hover, a.story-link.disabled:hover {
 }
 .content-leave.content-leave-active {
   opacity: 0.01;
-  transition: opacity .1s ease-in;
+  transition: opacity 100ms ease-in;
 }
