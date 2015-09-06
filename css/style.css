@@ -8,16 +8,15 @@ p {
 
 /* Story box styles */
 .storybox {
-  height: 100px;
+  height: 175px;
   margin: 10px 0;
-  padding: 15px;
+  padding: 12px 15px;
   border: none;
   border-radius: 8px;
   transition: border 200ms ease-in;
 }
 
 .storybox.active {
-  height: 200px;
   border: 1px solid black;
 }
 

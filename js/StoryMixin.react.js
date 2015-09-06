@@ -38,6 +38,16 @@ var CHOICES = {
 };
 
 var StoryMixin = {
+  _numActive: 1,
+
+  getInitialState: function() {
+    return {
+      gender: null,
+      faveCategory: null,
+      faveItem: null,
+    };
+  },
+
   /* Master object of story text */
   storyText: function(id, value) {
     var Link = LinkFactory(this.proceedStory, id);
@@ -126,14 +136,14 @@ var StoryMixin = {
       case 'meeting6-1':
         return (
           <div>
-            <p>"I'm One", {this.genderSubject()} told me.</p>
+            <p>"I'm One," {this.genderSubject()} told me.</p>
             <p><Link to="meeting7">"Two," I replied.</Link></p>
           </div>
         );
 
       case 'meeting7-0':
         return (
-          <p>"Two", {this.genderSubject()} replied.</p>
+          <p>"Two," {this.genderSubject()} replied.</p>
         );
 
       case 'meeting8-0':
@@ -155,6 +165,71 @@ var StoryMixin = {
         return (
           <p>{this.genderSubject().capitalize()} told me {this.genderObject()} favorite {this.state.faveCategory} was {this.state.faveItem}, and it turned out mine was the same!</p>
         );
+
+      case 'meeting11':
+        return (
+          <p>Our friendship clicked,</p>
+        );
+
+      case 'meeting12':
+        return (
+          <p>and we set off with a spring in our steps.</p>
+        );
+
+      case 'intros-0':
+        return (
+          <p>The next day, I met <Link to="intros-3">Four</Link> in the kitchen.</p>
+        );
+
+      case 'intros-1':
+        return (
+          <p>The next day, I met <Link to="intros-8">Nine</Link> in the hallway.</p>
+        );
+
+      case 'intros-3':
+        return (
+          <p>One and I shared laughs over drinks and snacks.</p>
+        );
+
+      case 'intros-3-2':
+        return (
+          <p>I hung out with <Link to="intros-2">Three</Link>, <Link to="intros-5">Six</Link>, and <Link to="intros-6">Seven</Link> at the park.</p>
+        );
+
+      case 'intros-8':
+        return (
+          <p>Two and I were headed to the same room.</p>
+        );
+
+      case 'intros-8-2':
+        return (
+          <p><Link to="intros-4">Five</Link> convinced me to try and ride two sheep.</p>
+        );
+
+      case 'intros-park':
+        return (
+          <p>We {this.getParkActivity()}, and chatted the whole evening.</p>
+        );
+
+      case 'intros-4':
+        return (
+          <p>Seven and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>
+        );
+
+      case 'intros-7':
+        return (
+          <p>Five and Seven fell off spectacularly and the sheep fled.</p>
+        );
+
+      case 'intros-done':
+        return (
+          <p><Link to="friends">friends</Link>.</p>
+        );
+      case 'friends':
+        return (
+          <p><Link to="death1">But it didn't last.</Link></p>
+        );
+
 
       default:
         return null;
@@ -188,6 +263,7 @@ var StoryMixin = {
         storyboxes[0].setText(this.storyText(0, 'meeting3-0'));
         storyboxes[1].setActive();
         storyboxes[1].setText(this.storyText(1, 'meeting3-1'));
+        this._numActive++;
         break;
 
       case 'meeting4':
@@ -223,11 +299,91 @@ var StoryMixin = {
           storyboxes[0].appendText(this.storyText(0, 'meeting10-0'));
           storyboxes[1].appendText(this.storyText(1, 'meeting10-1'));
         }, 200);
+        setTimeout(() => {
+          storyboxes[0].setText(this.storyText(0, 'meeting11'));
+          storyboxes[1].setText(this.storyText(1, 'meeting11'));
+        }, 4000);
+        setTimeout(() => {
+          storyboxes[0].appendText(this.storyText(0, 'meeting12'));
+          storyboxes[1].appendText(this.storyText(1, 'meeting12'));
+        }, 5000);
+        setTimeout(() => {
+          storyboxes[0].setText(this.storyText(0, 'intros-0'));
+          storyboxes[1].setText(this.storyText(1, 'intros-1'));
+        }, 10000);
+        break;
+
+      case 'intros-3':
+        storyboxes[3].setActive();
+        storyboxes[3].setText(this.storyText(3, 'intros-3'));
+        setTimeout(() => storyboxes[3].appendText(this.storyText(3, 'intros-3-2')), 1500);
+        this._numActive++;
+        break;
+      case 'intros-8':
+        storyboxes[8].setActive();
+        storyboxes[8].setText(this.storyText(8, 'intros-8'));
+        setTimeout(() => storyboxes[8].appendText(this.storyText(8, 'intros-8-2')), 2000);
+        this._numActive++;
+        break;
+
+      case 'intros-2':
+        storyboxes[2].setActive();
+        storyboxes[2].setText(this.storyText(2, 'intros-park'));
+        this._numActive++;
+        this.checkAllAlive();
+        break;
+      case 'intros-5':
+        storyboxes[5].setActive();
+        storyboxes[5].setText(this.storyText(5, 'intros-park'));
+        this._numActive++;
+        this.checkAllAlive();
+        break;
+      case 'intros-6':
+        storyboxes[6].setActive();
+        storyboxes[6].setText(this.storyText(6, 'intros-park'));
+        this._numActive++;
+        this.checkAllAlive();
+        break;
+
+      case 'intros-4':
+        storyboxes[4].setActive();
+        storyboxes[4].setText(this.storyText(4, 'intros-4'));
+        this._numActive++;
+        break;
+      case 'intros-7':
+        storyboxes[7].setActive();
+        storyboxes[7].setText(this.storyText(7, 'intros-7'));
+        this._numActive++;
+        this.checkAllAlive();
+        break;
+
+      case 'intros-done':
+        storyboxes.forEach((box) => box.clearText());
+        setTimeout(() => storyboxes[0].setText(<p>We joked,</p>), 100);
+        setTimeout(() => storyboxes[1].setText(<p>and laughed,</p>), 800);
+        setTimeout(() => storyboxes[2].setText(<p>and talked together;</p>), 1600);
+        setTimeout(() => storyboxes[3].setText(<p>we dueled,</p>), 3000);
+        setTimeout(() => storyboxes[4].setText(<p>and played,</p>), 3600);
+        setTimeout(() => storyboxes[5].setText(<p>and fought sometimes;</p>), 4200);
+        setTimeout(() => storyboxes[6].setText(<p>but in the end,</p>), 5000);
+        setTimeout(() => storyboxes[7].setText(<p>we were still</p>), 5500);
+        setTimeout(() => storyboxes[8].setText(this.storyText(8, 'intros-done')), 6000);
+        break;
+
+      case 'friends':
+        storyboxes.slice(1, 9).forEach((box) => box.setActive(false));
+        storyboxes[0].setText(this.storyText(0, 'friends'));
         break;
 
       default:
         storyboxes[id].setText(this.storyText(id, to));
         break;
+    }
+  },
+
+  checkAllAlive: function() {
+    if (this._numActive === 9) {
+      setTimeout(() => this.proceedStory(0, 'intros-done'), 5000);
     }
   },
 
@@ -245,6 +401,20 @@ var StoryMixin = {
 
   genderPossessive2: function() {
     return this.state.gender === 'M' ? 'his' : 'hers';
+  },
+
+  getParkActivity: function() {
+    var parkActivity = '';
+    if (this.state.faveCategory && this.state.faveItem) {
+      if (this.state.faveCategory === 'food') {
+        parkActivity = 'ate ' + this.state.faveItem;
+      } else if (this.state.faveCategory === 'color') {
+        parkActivity = 'were all wearing ' + this.state.faveItem + ' shirts';
+      } else if (this.state.faveCategory === 'sport') {
+        parkActivity = 'played ' + this.state.faveItem;
+      }
+    }
+    return parkActivity;
   },
 };
 

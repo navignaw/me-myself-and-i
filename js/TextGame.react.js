@@ -7,17 +7,9 @@ var VisualMixin = require('./VisualMixin.react.js');
 var TextGame = React.createClass({
   mixins: [StoryMixin, VisualMixin],
 
-  getInitialState: function() {
-    return {
-      gender: null,
-      faveCategory: null,
-      faveItem: null,
-    };
-  },
-
   componentDidMount: function() {
-    this.refs.storybox4.setActive(true);
-    this.refs.storybox4.appendText(this.storyText(4, 'menu'));
+    this.refs.storybox1.setActive(true);
+    this.refs.storybox1.appendText(this.storyText(1, 'menu'));
   },
 
   render: function() {
