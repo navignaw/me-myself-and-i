@@ -19,7 +19,6 @@ var Storybox = React.createClass({
       active: false,
       alive: true,
       asleep: false,
-      backgroundImage: null,
       content: [],
     };
   },
@@ -40,6 +39,15 @@ var Storybox = React.createClass({
 
   die: function() {
     this.setState({alive: false});
+  },
+
+  reanimate: function() {
+    this.clearText();
+    this.setState({
+      alive: true,
+      active: false,
+      asleep: false,
+    });
   },
 
   clearText: function() {

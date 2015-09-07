@@ -39,12 +39,6 @@ var CHOICES = {
     'I was a coward.': 'coward',
   },
 
-  decision: {
-    'We will leave it to luck.': 'lucky-choice',
-    /*'I am One. The original. I should be the one to live.': 'selfish-choice',
-    'I will die, so another can live.': 'brave-choice',*/
-  },
-
   endingChoice: {
     'I wash the number off in the river.': 'cleanse',
     'I keep the number.': 'keep',
@@ -54,6 +48,8 @@ var CHOICES = {
 var StoryMixin = {
   _numActive: 1,
   _pills: 0,
+  _refusals: 0,
+  _volunteers: 0,
 
   getInitialState: function() {
     return {
@@ -62,6 +58,7 @@ var StoryMixin = {
       faveItem: null,
       dead: [],
       lifeReason: null,
+      unlockedEndings: [],
     };
   },
 
@@ -72,12 +69,14 @@ var StoryMixin = {
 
     switch (value) {
       case 'menu':
+        var testing = <h5><Link to="TESTING_ONLY">TESTING ONLY</Link></h5>;
         return (
           <div className="menu text-center">
             <h2>me, myself, and I</h2>
             <br />
             <h5><Link to="start">Start</Link></h5>
             <h5><Link to="credits">Credits</Link></h5>
+            {/*testing*/ null}
           </div>
         );
 
@@ -187,10 +186,10 @@ var StoryMixin = {
         return <p>We {this.getParkActivity()}, and chatted the whole evening.</p>;
 
       case 'intros-4':
-        return <p>Seven and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>;
+        return <p>Nine and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>;
 
       case 'intros-7':
-        return <p>Five tripped spectacularly and Seven and I laughed as the sheep fled.</p>;
+        return <p>Five tripped spectacularly and Nine and I laughed as the sheep fled.</p>;
 
       case 'intros-done':
         return <p><Link to="friends">friends</Link>.</p>;
@@ -240,7 +239,7 @@ var StoryMixin = {
         return <p>After all, wasn't one the greatest? The original? The others were copies. It was only inevitable, back in that <Link to="end1">grim room</Link>...</p>;
 
       case 'coward':
-        return <p>After all, it was them or me. The others, they chose their own fate, back in that <Link to="end1">grim room</Link>...</p>;
+        return <p>Even though they chose their own fates... I should have said something, back in that <Link to="end1">grim room</Link>...</p>;
 
       case 'end1':
         return <p>I was led into a small room.</p>;
@@ -267,7 +266,7 @@ var StoryMixin = {
         return (
           <div>
             <p>There was a long silence. Then I spoke:</p>
-            <Choice newLines={true} of={CHOICES.decision} to="decision" />
+            <Choice newLines={true} of={this.getFinalChoice()} to="decision" />
           </div>
         );
 
@@ -279,7 +278,34 @@ var StoryMixin = {
         return <p>The lady nodded, and pulled out a bottle of pills. "Each of you will <Link to="lucky-pill">take one</Link>," she said. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'lucky-pill':
+        // TODO: offer variants
         return <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>
+
+      /* SELFISH BRANCH */
+      case 'selfish-choice-0':
+        return <p>I am One, the original. I deserve to live.</p>;
+
+      case 'selfish-choice-1':
+        return <p>I could not believe my ears as One, my longtime friend, claimed a right to live over me. <Link to="selfish-refusal">No, I would not have it.</Link></p>;
+
+      case 'selfish-refusal':
+        return <p>I protested loudly, demanding a fairer decision.</p>;
+
+      case 'selfish-all-refused':
+        return <p>The lady silenced us, and pulled out a bottle of pills. "Since we cannot settle this in a civilized manner... each of you will <Link to="selfish-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
+
+      case 'selfish-pill':
+        return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' betrayals.</p>
+
+      /* COWARD BRANCH */
+      case 'coward-choice':
+        return <p>I step forward and <Link to="coward-volunteer">volunteer to die</Link>.</p>;
+
+      case 'coward-all-volunteered':
+        return <p>The lady silenced us, and pulled out a bottle of pills. "You are all very brave, but since we cannot settle this... each of you will <Link to="coward-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
+
+      case 'coward-pill':
+        return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' bravery.</p>
 
       /* SURVIVED ENDING */
       case 'survived':
@@ -333,7 +359,7 @@ var StoryMixin = {
         return <p>I am One, but no more. This is my identity, and I will keep it to remain true to myself. Though the others have gone, they will live on. I will live on, and embrace a life with me, myself, and I.</p>;
 
       case 'fin':
-        return <p><Link to="credits">END</Link></p>;
+        return <p><Link to="fin">END</Link></p>;
 
       default:
         return null;
@@ -552,16 +578,26 @@ var StoryMixin = {
 
       case 'decision':
         this.stillAlive().forEach((box) => {
-          storyboxes[box].setText(this.storyText(box, choice));
+          if (choice === 'selfish-choice') {
+            if (box === 0) {
+              storyboxes[0].setText(this.storyText(0, 'selfish-choice-0'));
+            } else {
+              storyboxes[box].setText(this.storyText(box, 'selfish-choice-1'));
+            }
+          } else {
+            storyboxes[box].setText(this.storyText(box, choice));
+          }
         });
         break;
 
       case 'lucky-pill':
-        storyboxes[id].setText(this.storyText(id, 'lucky-pill'));
+      case 'selfish-pill':
+      case 'coward-pill':
+        storyboxes[id].setText(this.storyText(id, to));
         this.checkPills();
         break;
 
-      case 'lucky-pills-taken':
+      case 'pills-taken':
         this.stillAlive().forEach((box) => {
           if (box === 0) {
             storyboxes[0].setText(this.storyText(0, 'survived'));
@@ -569,6 +605,15 @@ var StoryMixin = {
             storyboxes[box].die();
           }
         })
+        break;
+
+      case 'selfish-refusal':
+        storyboxes[id].appendText(this.storyText(id, 'selfish-refusal'));
+        this.checkRefusals();
+        break;
+
+      case 'coward-volunteer':
+        this.checkVolunteers();
         break;
 
       case 'survived5':
@@ -593,6 +638,30 @@ var StoryMixin = {
         setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'fin')), 5000);
         break;
 
+      case 'fin':
+        this.resetState();
+        storyboxes[0].setText(this.storyText(0, 'credits'));
+        storyboxes.slice(1, 9).forEach((box) => box.reanimate());
+        break;
+
+      case 'TESTING_ONLY':
+        this.setState({
+          gender: 'M',
+          faveCategory: 'food',
+          faveItem: 'burgers',
+          dead: [2, 3, 9],
+          lifeReason: 'coward',
+        });
+        storyboxes.forEach((box, index) => {
+          box.clearText();
+          box.setActive();
+          if ([2, 3, 9].indexOf(index) !== -1) {
+            box.die();
+          }
+        });
+        setTimeout(() => this.proceedStory(0, 'end1'), 1000);
+        break;
+
       default:
         storyboxes[id].setText(this.storyText(id, to));
         break;
@@ -607,7 +676,23 @@ var StoryMixin = {
 
   checkPills: function() {
     if (++this._pills === 6) {
-      setTimeout(() => this.proceedStory(0, 'lucky-pills-taken'), 2000);
+      setTimeout(() => this.proceedStory(0, 'pills-taken'), 2000);
+    }
+  },
+
+  checkRefusals: function() {
+    if (++this._refusals === 5) {
+      this.stillAlive().forEach((box) => {
+        setTimeout(() => this.proceedStory(box, 'selfish-all-refused'), 2000);
+      });
+    }
+  },
+
+  checkVolunteers: function() {
+    if (++this._volunteers === 6) {
+      this.stillAlive().forEach((box) => {
+        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 2000);
+      });
     }
   },
 
@@ -663,8 +748,10 @@ var StoryMixin = {
   getAdjective: function() {
     if (this.state.lifeReason === 'lucky') {
       return 'lucky';
-    } else {
+    } else if (this.state.lifeReason === 'selfish') {
       return 'special';
+    } else {
+      return 'brave';
     }
   },
 
@@ -672,6 +759,30 @@ var StoryMixin = {
     return [0, 1, 2, 3, 4, 5, 6, 7, 8].filter((elem) =>
       this.state.dead.indexOf(elem) === -1
     );
+  },
+
+  getFinalChoice: function() {
+    if (this.state.lifeReason === 'lucky') {
+      return {
+        'We will leave it to luck.': 'lucky-choice',
+      };
+    } else if (this.state.lifeReason === 'selfish') {
+      return {
+        'I am One. The original. I should be the one to live.': 'selfish-choice',
+      };
+    } else {
+      return {
+        'I will die, so another can live.': 'coward-choice',
+      };
+    }
+  },
+
+  resetState: function() {
+    this._numActive = 1;
+    this._pills = 0;
+    this._refusals = 0;
+    this._volunteers = 0;
+    this.setState({dead: []});
   },
 };
 

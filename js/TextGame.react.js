@@ -8,8 +8,8 @@ var TextGame = React.createClass({
   mixins: [StoryMixin, VisualMixin],
 
   componentDidMount: function() {
-    this.refs.storybox1.setActive(true);
-    this.refs.storybox1.appendText(this.storyText(1, 'menu'));
+    this.refs.storybox4.setActive(true);
+    this.refs.storybox4.appendText(this.storyText(4, 'menu'));
   },
 
   render: function() {
