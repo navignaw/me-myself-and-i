@@ -20,9 +20,16 @@ p {
   border: 1px solid black;
 }
 
+.storybox.asleep {
+  background-color: #eee;
+  border-color: #999;
+  color: #999;
+}
+
 .storybox.dead {
-  background-color: red; /* find better color */
-  border-color: red;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+  color: white;
 }
 
 /* Link and choice colors */
@@ -35,6 +42,9 @@ a.story-link {
 }
 a.story-link.disabled {
   color: black;
+}
+.asleep a.story-link {
+  color: #999;
 }
 
 a.story-link:hover {

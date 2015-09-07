@@ -68,13 +68,13 @@ var ChoiceFactory = function(onClick, id) {
       };
     },
 
-    _onClick: function(id, to, key) {
+    _onClick: function(id, to, key, value) {
       if (this.state.clickedVal) {
         return;
       }
 
       this.setState({clickedVal: key});
-      onClick(id, to, key);
+      onClick(id, to, value);
     },
 
     render: function() {
@@ -83,13 +83,13 @@ var ChoiceFactory = function(onClick, id) {
 
       // Hide other choices if we already clicked
       if (this.state.clickedVal) {
-        return <span>{choices[this.state.clickedVal]}</span>;
+        return <span>{this.state.clickedVal}</span>;
       }
 
       var links = $.map(choices, (value, key) =>
         <Link key={key} clicked={this.state.clicked}
-          onClick={this._onClick.bind(null, id, to, key)}>
-          {value}
+          onClick={this._onClick.bind(null, id, to, key, value)}>
+          {key}
         </Link>
       );
 

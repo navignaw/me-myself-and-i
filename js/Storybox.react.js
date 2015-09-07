@@ -18,6 +18,7 @@ var Storybox = React.createClass({
     return {
       active: false,
       alive: true,
+      asleep: false,
       backgroundImage: null,
       content: [],
     };
@@ -28,6 +29,18 @@ var Storybox = React.createClass({
     if (value === false) {
       this.clearText();
     }
+  },
+
+  setAsleep: function(value) {
+    this.setState({asleep: value === undefined ? true : value});
+    if (value === false) {
+      this.clearText();
+    }
+  },
+
+  die: function() {
+    this.setState({alive: false});
+    this.clearText();
   },
 
   clearText: function() {
@@ -59,6 +72,7 @@ var Storybox = React.createClass({
       <div className="col-md-4 col-sm-6 col-xs-12">
         <div className={cx('storybox', {
           'active': this.state.active,
+          'asleep': this.state.alive && this.state.asleep,
           'dead': !this.state.alive,
         })}>
           <TransitionGroup transitionName="content">

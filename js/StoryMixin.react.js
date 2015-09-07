@@ -4,8 +4,8 @@ var {ChoiceFactory, LinkFactory} = require('./Link.react.js');
 
 var CHOICES = {
   gender: {
-    M: 'boy',
-    F: 'girl'
+    boy: 'M',
+    girl: 'F'
   },
   faveCategory: {
     food: 'food',
@@ -25,15 +25,18 @@ var CHOICES = {
     green: 'green',
     blue: 'blue',
     purple: 'purple',
-    pink: 'pink',
-    black: 'black',
-    white: 'white',
   },
   sport: {
     baseball: 'baseball',
     soccer: 'soccer',
     football: 'football',
     tennis: 'tennis',
+  },
+
+  lifeReasons: {
+    'I was just lucky.': 'lucky',
+    'I was number One. I deserved it.': 'selfish',
+    'I was a coward.': 'coward',
   },
 };
 
@@ -45,6 +48,8 @@ var StoryMixin = {
       gender: null,
       faveCategory: null,
       faveItem: null,
+      dead: [],
+      lifeReason: null,
     };
   },
 
@@ -230,6 +235,54 @@ var StoryMixin = {
           <p><Link to="death1">But it didn't last.</Link></p>
         );
 
+      case 'death1':
+        return (
+          <p>The third month, <Choice of={{Two: 1, Four: 3, Seven: 6}} to="death2" /> died in {this.genderPossessive()} sleep.</p>
+        );
+      case 'death2':
+        return (
+          <p>I was seized and strapped to a bed. I never woke up.</p>
+        );
+
+      case 'death3':
+        return (
+          <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, too, passed away.</p>
+        );
+      case 'death4':
+        return (
+          <p>I was drugged, but my body could not take it.</p>
+        );
+
+      case 'death5':
+        return (
+          <p>The next day, <Choice of={{Six: 5, Nine: 8}} to="death6" /> disappeared without a trace.</p>
+        );
+      case 'death6':
+        return (
+          <p>I watched them grab {this.getSecondDead()} and followed them. The last thing I heard was {this.genderPossessive()} screams.</p>
+        );
+
+      case 'death7':
+        return (
+          <p>And then, <Link to="ribbit1">just yesterday</Link>, we were assembled into a room...</p>
+        );
+
+      case 'ribbit1':
+        return (
+          <p>A ribbit jolts me out of the past. Shaking, I turn to see a frog leap into the river, only to be <Link to="ribbit2">seized</Link> by the claws of a large bird.</p>
+        );
+      case 'ribbit2':
+        return (
+          <p>Life, extinguished just like that. Why am I the lone survivor? <Link to="why">Why do I live on</Link>, while the others are snatched away by the claws of death?</p>
+        );
+
+      case 'why':
+        return (
+          <div>
+            <p>I tell myself again:</p>
+            <Choice newLines={true} of={CHOICES.lifeReasons} to="life-reasons" />
+          </div>
+        );
 
       default:
         return null;
@@ -371,8 +424,47 @@ var StoryMixin = {
         break;
 
       case 'friends':
-        storyboxes.slice(1, 9).forEach((box) => box.setActive(false));
+        storyboxes.slice(1, 9).forEach((box) => box.setAsleep(true));
         storyboxes[0].setText(this.storyText(0, 'friends'));
+        break;
+
+      case 'death2':
+        storyboxes[choice].die();
+        var dead = this.state.dead;
+        dead.push(choice);
+        this.setState({dead: dead});
+        storyboxes[choice].setText(this.storyText(choice, 'death2'));
+        setTimeout(() => this.proceedStory(0, 'death3'), 2500);
+        break;
+
+      case 'death3':
+      case 'death5':
+      case 'death7':
+        storyboxes[id].appendText(this.storyText(id, to));
+        break;
+
+      case 'death4':
+        storyboxes[choice].die();
+        var dead = this.state.dead;
+        dead.push(choice);
+        this.setState({dead: dead});
+        storyboxes[choice].setText(this.storyText(choice, 'death4'));
+        setTimeout(() => this.proceedStory(0, 'death5'), 2500);
+        break;
+
+      case 'death6':
+        storyboxes[choice].die();
+        var dead = this.state.dead;
+        dead.push(choice);
+        this.setState({dead: dead});
+        storyboxes[choice].setText(this.storyText(choice, 'death6'));
+        setTimeout(() => this.proceedStory(0, 'death7'), 2500);
+        break;
+
+      case 'life-reasons':
+        console.log(choice);
+        this.setState({lifeReason: choice});
+        // TODO: keep going
         break;
 
       default:
@@ -415,6 +507,21 @@ var StoryMixin = {
       }
     }
     return parkActivity;
+  },
+
+  getSecondDead: function() {
+    if (this.state.dead.length < 2) {
+      return '';
+    }
+    switch (this.state.dead[1]) {
+      case 2:
+        return 'Three';
+      case 4:
+        return 'Five';
+      case 7:
+        return 'Eight';
+    }
+    return '';
   },
 };
 
