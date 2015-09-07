@@ -38,10 +38,22 @@ var CHOICES = {
     'I was number One. I deserved it.': 'selfish',
     'I was a coward.': 'coward',
   },
+
+  decision: {
+    'We will leave it to luck.': 'lucky-choice',
+    /*'I am One. The original. I should be the one to live.': 'selfish-choice',
+    'I will die, so another can live.': 'brave-choice',*/
+  },
+
+  endingChoice: {
+    'I wash the number off in the river.': 'cleanse',
+    'I keep the number.': 'keep',
+  },
 };
 
 var StoryMixin = {
   _numActive: 1,
+  _pills: 0,
 
   getInitialState: function() {
     return {
@@ -70,9 +82,7 @@ var StoryMixin = {
         );
 
       case 'start':
-        return (
-          <p>I awaken in a grassy field to the glare of sunlight and a throbbing headache. Rubbing my temples, I crawl to the nearby stream to splash my face. A blank-eyed <Choice of={CHOICES.gender} to="gender" /> stares back at me.</p>
-        );
+        return <p>I awaken in a grassy field to the glare of sunlight and a throbbing headache. Rubbing my temples, I crawl to the nearby stream to splash my face. A blank-eyed <Choice of={CHOICES.gender} to="gender" /> stares back at me.</p>;
 
       case 'credits':
         return (
@@ -85,29 +95,19 @@ var StoryMixin = {
         );
 
       case 'river1':
-        return (
-          <p>Reflected in the rippling current is a familiar face. Lips stuck in a permanent grimace. Glassy eyes, somewhere far in the distance. But as usual, I am drawn to the <Link to="river2">red ink</Link> scrawled on my forehead.</p>
-        );
+        return <p>Reflected in the rippling current is a familiar face. Lips stuck in a permanent grimace. Glassy eyes, somewhere far in the distance. But as usual, I am drawn to the <Link to="river2">red ink</Link> scrawled on my forehead.</p>;
 
       case 'river2':
-        return (
-          <p>One. That was the number I was assigned. We were all, once. All <Link to="river3">nine of us</Link>...</p>
-        );
+        return <p>One. That was the number I was assigned. We were all, once. All <Link to="river3">nine of us</Link>...</p>;
 
       case 'river3':
-        return (
-          <p>Yes, back then, we were a gang. <Link to="meeting1">Together, inseparable.</Link> Life was different then.</p>
-        );
+        return <p>Yes, back then, we were a gang. <Link to="meeting1">Together, inseparable.</Link> Life was different then.</p>;
 
       case 'meeting1':
-        return (
-          <p>I first met Two, napping in the library. There was something familiar about {this.genderObject()}, something that called to me, <Link to="meeting2">drawing my attention</Link>.</p>
-        );
+        return <p>I first met Two, napping in the library. There was something familiar about {this.genderObject()}, something that called to me, <Link to="meeting2">drawing my attention</Link>.</p>;
 
       case 'meeting2':
-        return (
-          <p>I walked over, curious. Two, sensing my presence, <Link to="meeting3">opened {this.genderPossessive()} eyes</Link>.</p>
-        );
+        return <p>I walked over, curious. Two, sensing my presence, <Link to="meeting3">opened {this.genderPossessive()} eyes</Link>.</p>;
 
       case 'meeting3-0':
         return (
@@ -118,9 +118,7 @@ var StoryMixin = {
         );
 
       case 'meeting3-1':
-        return (
-          <p>Sensing a presence, I sat up and gazed at {this.genderObject()}.</p>
-        );
+        return <p>Sensing a presence, I sat up and gazed at {this.genderObject()}.</p>;
 
       case 'meeting4-1':
         return (
@@ -147,134 +145,85 @@ var StoryMixin = {
         );
 
       case 'meeting7-0':
-        return (
-          <p>"Two," {this.genderSubject()} replied.</p>
-        );
+        return <p>"Two," {this.genderSubject()} replied.</p>;
 
       case 'meeting8-0':
-        return (
-          <p>I told {this.genderObject()} my favorite <Choice of={CHOICES.faveCategory} to="fave1" /></p>
-        );
+        return <p>I told {this.genderObject()} my favorite <Choice of={CHOICES.faveCategory} to="fave1" /></p>;
 
       case 'meeting9-0':
-        return (
-          <p>was <Choice of={CHOICES[this.state.faveCategory]} to="fave2" />,</p>
-        );
+        return <p>was <Choice of={CHOICES[this.state.faveCategory]} to="fave2" />,</p>;
 
       case 'meeting10-0':
-        return (
-          <p>and it turned out {this.genderPossessive2()} was the same!</p>
-        );
+        return <p>and it turned out {this.genderPossessive2()} was the same!</p>;
 
       case 'meeting10-1':
-        return (
-          <p>{this.genderSubject().capitalize()} told me {this.genderObject()} favorite {this.state.faveCategory} was {this.state.faveItem}, and it turned out mine was the same!</p>
-        );
+        return <p>{this.genderSubject().capitalize()} told me {this.genderObject()} favorite {this.state.faveCategory} was {this.state.faveItem}, and it turned out mine was the same!</p>;
 
       case 'meeting11':
-        return (
-          <p>Our friendship clicked,</p>
-        );
+        return <p>Our friendship clicked,</p>;
 
       case 'meeting12':
-        return (
-          <p>and we set off with a spring in our steps.</p>
-        );
+        return <p>and we set off with a spring in our steps.</p>;
 
       case 'intros-0':
-        return (
-          <p>The next day, I met <Link to="intros-3">Four</Link> in the kitchen.</p>
-        );
+        return <p>The next day, I met <Link to="intros-3">Four</Link> in the kitchen.</p>;
 
       case 'intros-1':
-        return (
-          <p>The next day, I met <Link to="intros-8">Nine</Link> in the hallway.</p>
-        );
+        return <p>The next day, I met <Link to="intros-8">Nine</Link> in the hallway.</p>;
 
       case 'intros-3':
-        return (
-          <p>One and I shared laughs over drinks and snacks.</p>
-        );
+        return <p>One and I shared laughs over drinks and snacks.</p>;
 
       case 'intros-3-2':
-        return (
-          <p>I hung out with <Link to="intros-2">Three</Link>, <Link to="intros-5">Six</Link>, and <Link to="intros-6">Seven</Link> at the park.</p>
-        );
+        return <p>I hung out with <Link to="intros-2">Three</Link>, <Link to="intros-5">Six</Link>, and <Link to="intros-6">Seven</Link> at the park.</p>;
 
       case 'intros-8':
-        return (
-          <p>Two and I were headed to the same room.</p>
-        );
+        return <p>Two and I were headed to the same room.</p>;
 
       case 'intros-8-2':
-        return (
-          <p><Link to="intros-4">Five</Link> convinced me to try and ride two sheep.</p>
-        );
+        return <p><Link to="intros-4">Five</Link> convinced me to play in the sheep pen.</p>;
 
       case 'intros-park':
-        return (
-          <p>We {this.getParkActivity()}, and chatted the whole evening.</p>
-        );
+        return <p>We {this.getParkActivity()}, and chatted the whole evening.</p>;
 
       case 'intros-4':
-        return (
-          <p>Seven and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>
-        );
+        return <p>Seven and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>;
 
       case 'intros-7':
-        return (
-          <p>Five and Seven fell off spectacularly and the sheep fled.</p>
-        );
+        return <p>Five tripped spectacularly and Seven and I laughed as the sheep fled.</p>;
 
       case 'intros-done':
-        return (
-          <p><Link to="friends">friends</Link>.</p>
-        );
+        return <p><Link to="friends">friends</Link>.</p>;
+
       case 'friends':
-        return (
-          <p><Link to="death1">But it didn't last.</Link></p>
-        );
+        return <p><Link to="death1">But it didn't last.</Link></p>;
 
       case 'death1':
-        return (
-          <p>The third month, <Choice of={{Two: 1, Four: 3, Seven: 6}} to="death2" /> died in {this.genderPossessive()} sleep.</p>
-        );
+        return <p>The third month, <Choice of={{Two: 1, Four: 3, Seven: 6}} to="death2" /> died in {this.genderPossessive()} sleep.</p>;
+
       case 'death2':
-        return (
-          <p>I was seized and strapped to a bed. I never woke up.</p>
-        );
+        return <p>I was seized and strapped to a bed. I never woke up.</p>;
 
       case 'death3':
-        return (
-          <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, too, passed away.</p>
-        );
+        return <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, too, passed away.</p>;
+
       case 'death4':
-        return (
-          <p>I was drugged, but my body could not take it.</p>
-        );
+        return <p>I was drugged, but my body could not take it.</p>;
 
       case 'death5':
-        return (
-          <p>The next day, <Choice of={{Six: 5, Nine: 8}} to="death6" /> disappeared without a trace.</p>
-        );
+        return <p>The next day, <Choice of={{Six: 5, Nine: 8}} to="death6" /> disappeared without a trace.</p>;
+
       case 'death6':
-        return (
-          <p>I watched them grab {this.getSecondDead()} and followed them. The last thing I heard was {this.genderPossessive()} screams.</p>
-        );
+        return <p>I watched them grab {this.getSecondDead()} and followed them. The last thing I heard was {this.genderPossessive()} screams before all went dark.</p>;
 
       case 'death7':
-        return (
-          <p>And then, <Link to="ribbit1">just yesterday</Link>, we were assembled into a room...</p>
-        );
+        return <p>And then, <Link to="ribbit1">just yesterday</Link>, we were assembled into a room...</p>;
 
       case 'ribbit1':
-        return (
-          <p>A ribbit jolts me out of the past. Shaking, I turn to see a frog leap into the river, only to be <Link to="ribbit2">seized</Link> by the claws of a large bird.</p>
-        );
+        return <p>A ribbit jolts me out of the past. Shaking, I turn to see a frog leap into the river, only to be <Link to="ribbit2">seized</Link> by the claws of a large bird.</p>;
+
       case 'ribbit2':
-        return (
-          <p>Life, extinguished just like that. Why am I the lone survivor? <Link to="why">Why do I live on</Link>, while the others are snatched away by the claws of death?</p>
-        );
+        return <p>Life, extinguished just like that. Why am I the lone survivor? <Link to="why">Why do I live on</Link>, while the others are snatched away by the claws of death?</p>;
 
       case 'why':
         return (
@@ -283,6 +232,108 @@ var StoryMixin = {
             <Choice newLines={true} of={CHOICES.lifeReasons} to="life-reasons" />
           </div>
         );
+
+      case 'lucky':
+        return <p>After all, we had the same chance of survival, back in that <Link to="end1">grim room</Link>...</p>;
+
+      case 'selfish':
+        return <p>After all, wasn't one the greatest? The original? The others were copies. It was only inevitable, back in that <Link to="end1">grim room</Link>...</p>;
+
+      case 'coward':
+        return <p>After all, it was them or me. The others, they chose their own fate, back in that <Link to="end1">grim room</Link>...</p>;
+
+      case 'end1':
+        return <p>I was led into a small room.</p>;
+
+      case 'end2':
+        return <p>A lady explained to me that their funding had run out,</p>;
+
+      case 'end3':
+        return <p>and that we could no longer continue the way we used to.</p>;
+
+      case 'end4-0':
+        return <p>Well, all but <Link to="end5">one of us</Link>...</p>;
+
+      case 'end4-1':
+        return <p>Well, all but one of us...</p>;
+
+      case 'end5-0':
+        return <p>We were given a choice. We could select <Link to="end6">one of us</Link> who would survive... and the rest would be "put to a nice, long sleep."</p>;
+
+      case 'end5-1':
+        return <p>We were given a choice. We could select one of us who would survive... and the rest would be "put to a nice, long sleep."</p>;
+
+      case 'end6-0':
+        return (
+          <div>
+            <p>There was a long silence. Then I spoke:</p>
+            <Choice newLines={true} of={CHOICES.decision} to="decision" />
+          </div>
+        );
+
+      case 'end6-1':
+        return <p>There was a long silence.</p>;
+
+      /* LUCK BRANCH */
+      case 'lucky-choice':
+        return <p>The lady nodded, and pulled out a bottle of pills. "Each of you will <Link to="lucky-pill">take one</Link>," she said. "You will be put to sleep-- and exactly one of you will wake."</p>;
+
+      case 'lucky-pill':
+        return <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>
+
+      /* SURVIVED ENDING */
+      case 'survived':
+        return <p>I awaken in a grassy field to the glare of sunlight and a throbbing headache. Rubbing my temples, I crawl to the nearby <Link to="survived2">stream</Link> to splash my face. A blank-eyed {this.genderBoyGirl()} stares back at me.</p>
+
+      case 'survived2':
+        return <p>Reflected in the rippling current is a familiar face. Lips stuck in a permanent grimace. Glassy eyes, somewhere far in the distance. But as usual, I am drawn to the <Link to="survived3">red ink</Link> scrawled on my forehead.</p>;
+
+      case 'survived3':
+        return <p>One. That was the number I was <Link to="survived4">assigned</Link>.</p>;
+
+      case 'survived4':
+        return <p><Link to="survived5">What was it they told me?</Link></p>;
+
+      case 'reveal1':
+        return <p>You are {this.getAdjective()}, child.</p>;
+
+      case 'reveal2':
+        return <p>You are number one!</p>;
+
+      case 'reveal3':
+        return <p>But... well, actually, I'll let you in on a <Link to="reveal4">secret</Link>.</p>;
+
+      case 'reveal4':
+        return <p>The truth is, you were all mixed up as babies...</p>;
+
+      case 'reveal5':
+        return <p>In fact, there was no way to tell which of you was the original.</p>;
+
+      case 'reveal6':
+        return <p>So we ended up just labelling you randomly! How <Link to="reveal7">funny</Link> is that?</p>;
+
+      case 'reveal7':
+        return <p>Funny. Life is funny. I'm alive and here, yet at the same time, dead in eight different places.</p>;
+
+      case 'reveal8':
+        return <p>Yet... one of us was always guaranteed to survive, and so I would always have <Link to="reveal9">lived on</Link>.</p>;
+
+      case 'reveal9':
+        return (
+          <div>
+            <p>The sun shines, and life goes on. I glance one more time at the red ink on my forehead.</p>
+            <Choice newLines={true} of={CHOICES.endingChoice} to="ending" />
+          </div>
+        );
+
+      case 'cleanse':
+        return <p>I am One. But I am Two, and Three, Four and Five, Six and Seven, Eight and Nine. Cleansing the digit and single identity, I move on and embrace a life with me, myself, and I.</p>;
+
+      case 'keep':
+        return <p>I am One, but no more. This is my identity, and I will keep it to remain true to myself. Though the others have gone, they will live on. I will live on, and embrace a life with me, myself, and I.</p>;
+
+      case 'fin':
+        return <p><Link to="credits">END</Link></p>;
 
       default:
         return null;
@@ -462,9 +513,84 @@ var StoryMixin = {
         break;
 
       case 'life-reasons':
-        console.log(choice);
         this.setState({lifeReason: choice});
-        // TODO: keep going
+        storyboxes[0].setText(this.storyText(0, choice));
+        break;
+
+      case 'end1':
+        this.stillAlive().forEach((box) => {
+          storyboxes[box].setAsleep(false);
+          setTimeout(() => storyboxes[box].setText(this.storyText(box, 'end2')), 500);
+          setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end3')), 2500);
+          if (box === 0) {
+            setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end4-0')), 4500);
+          } else {
+            setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end4-1')), 4500);
+          }
+        });
+        break;
+
+      case 'end5':
+        this.stillAlive().forEach((box) => {
+          if (box === 0) {
+            storyboxes[box].setText(this.storyText(box, 'end5-0'));
+          } else {
+            storyboxes[box].setText(this.storyText(box, 'end5-1'));
+          }
+        });
+        break;
+
+      case 'end6':
+        this.stillAlive().forEach((box) => {
+          if (box === 0) {
+            storyboxes[box].setText(this.storyText(box, 'end6-0'));
+          } else {
+            storyboxes[box].setText(this.storyText(box, 'end6-1'));
+          }
+        });
+        break;
+
+      case 'decision':
+        this.stillAlive().forEach((box) => {
+          storyboxes[box].setText(this.storyText(box, choice));
+        });
+        break;
+
+      case 'lucky-pill':
+        storyboxes[id].setText(this.storyText(id, 'lucky-pill'));
+        this.checkPills();
+        break;
+
+      case 'lucky-pills-taken':
+        this.stillAlive().forEach((box) => {
+          if (box === 0) {
+            storyboxes[0].setText(this.storyText(0, 'survived'));
+          } else {
+            storyboxes[box].die();
+          }
+        })
+        break;
+
+      case 'survived5':
+        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal1')), 500);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal2')), 2500);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal3')), 4500);
+        break;
+
+      case 'reveal4':
+        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal4')), 500);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal5')), 4000);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal6')), 8000);
+        break;
+
+      case 'reveal7':
+        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal7')), 500);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal8')), 5000);
+        break;
+
+      case 'ending':
+        storyboxes[0].setText(this.storyText(0, choice));
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'fin')), 5000);
         break;
 
       default:
@@ -476,6 +602,12 @@ var StoryMixin = {
   checkAllAlive: function() {
     if (this._numActive === 9) {
       setTimeout(() => this.proceedStory(0, 'intros-done'), 5000);
+    }
+  },
+
+  checkPills: function() {
+    if (++this._pills === 6) {
+      setTimeout(() => this.proceedStory(0, 'lucky-pills-taken'), 2000);
     }
   },
 
@@ -493,6 +625,10 @@ var StoryMixin = {
 
   genderPossessive2: function() {
     return this.state.gender === 'M' ? 'his' : 'hers';
+  },
+
+  genderBoyGirl: function() {
+    return this.state.gender === 'M' ? 'boy' : 'girl';
   },
 
   getParkActivity: function() {
@@ -522,6 +658,20 @@ var StoryMixin = {
         return 'Eight';
     }
     return '';
+  },
+
+  getAdjective: function() {
+    if (this.state.lifeReason === 'lucky') {
+      return 'lucky';
+    } else {
+      return 'special';
+    }
+  },
+
+  stillAlive: function() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 8].filter((elem) =>
+      this.state.dead.indexOf(elem) === -1
+    );
   },
 };
 

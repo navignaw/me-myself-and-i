@@ -40,7 +40,6 @@ var Storybox = React.createClass({
 
   die: function() {
     this.setState({alive: false});
-    this.clearText();
   },
 
   clearText: function() {
