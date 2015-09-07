@@ -69,13 +69,13 @@ var StoryMixin = {
 
     switch (value) {
       case 'menu':
-        var testing = <h5><Link to="TESTING_ONLY">TESTING ONLY</Link></h5>;
+        var testing = <h4><Link to="TESTING_ONLY">TESTING ONLY</Link></h4>;
         return (
           <div className="menu text-center">
             <h2>me, myself, and I</h2>
             <br />
-            <h5><Link to="start">Start</Link></h5>
-            <h5><Link to="credits">Credits</Link></h5>
+            <h4><Link to="start">Start</Link></h4>
+            <h4><Link to="credits">Credits</Link></h4>
             {/*testing*/ null}
           </div>
         );
@@ -86,10 +86,10 @@ var StoryMixin = {
       case 'credits':
         return (
           <div className="credits text-center">
-            <h5>Story & Design: Ivan Wang (one)</h5>
-            <h5>Programming: Ivan Wang (two)</h5>
-            <h5>Testing: </h5>
-            <h5><Link to="menu">Back</Link></h5>
+            <h4>Story & Design: Ivan Wang (one)</h4>
+            <h4>Programming: Ivan Wang (two)</h4>
+            <h4>Testing: Archit Amal Sahay</h4>
+            <h4><Link to="menu">Back</Link></h4>
           </div>
         );
 

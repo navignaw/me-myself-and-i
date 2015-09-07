@@ -1,5 +1,5 @@
-var React = require('react/addons');
-var TransitionGroup = React.addons.CSSTransitionGroup;
+var React = require('react');
+var TransitionGroup = require('timeout-transition-group');
 
 var cx = require('classnames');
 var TimerMixin = require('react-timer-mixin');
@@ -82,7 +82,10 @@ var Storybox = React.createClass({
           'asleep': this.state.alive && this.state.asleep,
           'dead': !this.state.alive,
         })}>
-          <TransitionGroup transitionName="content">
+          <TransitionGroup
+            enterTimeout={200}
+            leaveTimeout={100}
+            transitionName="content">
             {content}
           </TransitionGroup>
         </div>
