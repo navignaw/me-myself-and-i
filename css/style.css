@@ -1,7 +1,6 @@
 body {
   font-family: 'Kreon', serif;
   font-size: 12pt;
-  background-color: #e3fcf0;
 }
 
 p {
@@ -20,6 +19,7 @@ p {
 
 .storybox.active {
   border: 1px solid black;
+  background-color: #f4fdf1;
 }
 
 .storybox.asleep {

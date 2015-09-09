@@ -204,7 +204,7 @@ var StoryMixin = {
         return <p>Walking to my room, a pain blossomed in my chest, and the ground rushed at me.</p>;
 
       case 'death3':
-        return <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, died in {this.genderPossessive()} sleep.</p>;
+        return <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" /> died in {this.genderPossessive()} sleep.</p>;
 
       case 'death4':
         return <p>I was seized and strapped to a bed. I never woke up.</p>;
@@ -278,15 +278,29 @@ var StoryMixin = {
         return <p>The lady nodded, and pulled out a bottle of pills. "Each of you will <Link to="lucky-pill">take one</Link>," she said. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'lucky-pill':
-        // TODO: offer variants
-        return <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>
+        var responses = [
+          <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was wondering which one of us would live.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was who would survive to see tomorrow.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was how everything would be different tomorrow.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was fear for myself, and for my friends.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>,
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
 
       /* SELFISH BRANCH */
       case 'selfish-choice-0':
         return <p>I am One, the original. I deserve to live.</p>;
 
       case 'selfish-choice-1':
-        return <p>I could not believe my ears as One, my longtime friend, claimed a right to live over me. <Link to="selfish-refusal">No, I would not have it.</Link></p>;
+        var responses = [
+          <p>I could not believe my ears as One, my longtime friend, claimed a right to live over me. <Link to="selfish-refusal">No, I would not have it.</Link></p>,
+          <p>What did One say? He deserved to live because of his label, while we would die? <Link to="selfish-refusal">No, I would not have it.</Link></p>,
+          <p>How could One be so selfish? What did a single number or label matter? <Link to="selfish-refusal">No, I would not have it.</Link></p>,
+          <p>As One proclaimed himself special, I shook my head in disbelief. <Link to="selfish-refusal">No, I would not have it.</Link></p>,
+          <p>How could One's life be more valuable than any of ours? <Link to="selfish-refusal">No, I would not have it.</Link></p>,
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
 
       case 'selfish-refusal':
         return <p>I protested loudly, demanding a fairer decision.</p>;
@@ -295,7 +309,15 @@ var StoryMixin = {
         return <p>The lady silenced us, and pulled out a bottle of pills. "Since we cannot settle this in a civilized manner... each of you will <Link to="selfish-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'selfish-pill':
-        return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' betrayals.</p>
+        var responses = [
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's betrayal.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's selfishness.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's bitterness.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's self-righteousness.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's betrayal.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's selfishness.</p>,
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
 
       /* COWARD BRANCH */
       case 'coward-choice':
@@ -305,7 +327,14 @@ var StoryMixin = {
         return <p>The lady silenced us, and pulled out a bottle of pills. "You are all very brave, but since we cannot settle this... each of you will <Link to="coward-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'coward-pill':
-        return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' bravery.</p>
+        var responses = [
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' bravery.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' courage.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' support.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of our refusal to let each other die.</p>,
+          <p>I swallowed the pill and darkness swallowed me. My last thought was of our bond.</p>,
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
 
       /* SURVIVED ENDING */
       case 'survived':
