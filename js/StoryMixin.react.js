@@ -198,16 +198,16 @@ var StoryMixin = {
         return <p><Link to="death1">But it didn't last.</Link></p>;
 
       case 'death1':
-        return <p>The third month, <Choice of={{Two: 1, Four: 3, Seven: 6}} to="death2" /> died in {this.genderPossessive()} sleep.</p>;
+        return <p>The third month, <Choice of={{Two: 1, Four: 3, Seven: 6}} to="death2" /> fell sick and passed away.</p>;
 
       case 'death2':
-        return <p>I was seized and strapped to a bed. I never woke up.</p>;
+        return <p>Walking to my room, a pain blossomed in my chest, and the ground rushed at me.</p>;
 
       case 'death3':
-        return <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, too, passed away.</p>;
+        return <p>The fifth month, <Choice of={{Three: 2, Five: 4, Eight: 7}} to="death4" />, died in {this.genderPossessive()} sleep.</p>;
 
       case 'death4':
-        return <p>I was drugged, but my body could not take it.</p>;
+        return <p>I was seized and strapped to a bed. I never woke up.</p>;
 
       case 'death5':
         return <p>The next day, <Choice of={{Six: 5, Nine: 8}} to="death6" /> disappeared without a trace.</p>;

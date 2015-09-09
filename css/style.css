@@ -1,15 +1,16 @@
 body {
   font-family: 'Kreon', serif;
   font-size: 12pt;
+  background-color: #e3fcf0;
 }
 
 p {
-  font-weight: 300;
+  font-weight: 320;
 }
 
 /* Story box styles */
 .storybox {
-  height: 180px;
+  height: 185px;
   margin: 10px 0;
   padding: 12px 15px;
   border: none;
