@@ -699,20 +699,20 @@ var StoryMixin = {
 
   checkAllAlive: function() {
     if (this._numActive === 9) {
-      setTimeout(() => this.proceedStory(0, 'intros-done'), 5000);
+      setTimeout(() => this.proceedStory(0, 'intros-done'), 3000);
     }
   },
 
   checkPills: function() {
     if (++this._pills === 6) {
-      setTimeout(() => this.proceedStory(0, 'pills-taken'), 2000);
+      setTimeout(() => this.proceedStory(0, 'pills-taken'), 500);
     }
   },
 
   checkRefusals: function() {
     if (++this._refusals === 5) {
       this.stillAlive().forEach((box) => {
-        setTimeout(() => this.proceedStory(box, 'selfish-all-refused'), 2000);
+        setTimeout(() => this.proceedStory(box, 'selfish-all-refused'), 500);
       });
     }
   },
@@ -720,7 +720,7 @@ var StoryMixin = {
   checkVolunteers: function() {
     if (++this._volunteers === 6) {
       this.stillAlive().forEach((box) => {
-        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 2000);
+        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 500);
       });
     }
   },

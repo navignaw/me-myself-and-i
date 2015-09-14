@@ -2,10 +2,9 @@ var React = require('react');
 
 var Storybox = require('./Storybox.react.js');
 var StoryMixin = require('./StoryMixin.react.js');
-var VisualMixin = require('./VisualMixin.react.js');
 
 var TextGame = React.createClass({
-  mixins: [StoryMixin, VisualMixin],
+  mixins: [StoryMixin],
 
   componentDidMount: function() {
     this.refs.storybox4.setActive(true);
