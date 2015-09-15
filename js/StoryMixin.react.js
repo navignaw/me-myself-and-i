@@ -27,6 +27,7 @@ var CHOICES = {
     purple: 'purple',
   },
   sport: {
+    basketball: 'basketball',
     baseball: 'baseball',
     soccer: 'soccer',
     football: 'football',
@@ -70,13 +71,105 @@ var StoryMixin = {
     switch (value) {
       case 'menu':
         var testing = <h4><Link to="TESTING_ONLY">TESTING ONLY</Link></h4>;
+        var cover = <h4><Link to="TITLE_COVER">Cover</Link></h4>;
+
         return (
           <div className="menu text-center">
             <h2>me, myself, and I</h2>
             <br />
             <h4><Link to="start">Start</Link></h4>
             <h4><Link to="credits">Credits</Link></h4>
-            {/*testing*/ null}
+            {/*testing || cover*/ null}
+          </div>
+        );
+
+      case 'title-cover-0':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of multiple identities</p>
+          </div>
+        );
+
+      case 'title-cover-1':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of camaraderie</p>
+          </div>
+        );
+
+      case 'title-cover-2':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of luck</p>
+          </div>
+        );
+
+      case 'title-cover-3':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of friendship and trust</p>
+          </div>
+        );
+
+      case 'title-cover-4':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of selfishness</p>
+          </div>
+        );
+
+      case 'title-cover-5':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of betrayal</p>
+          </div>
+        );
+
+      case 'title-cover-6':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of courage</p>
+          </div>
+        );
+
+      case 'title-cover-6':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of cowardice</p>
+          </div>
+        );
+
+      case 'title-cover-7':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of individuality</p>
+          </div>
+        );
+
+      case 'title-cover-8':
+        return (
+          <div className="menu text-center">
+            <h2>me, myself, and I</h2>
+            <br />
+            <p>a game of sacrifice</p>
           </div>
         );
 
@@ -320,11 +413,14 @@ var StoryMixin = {
         return responses[Math.floor(Math.random() * responses.length)];
 
       /* COWARD BRANCH */
-      case 'coward-choice':
-        return <p>I step forward and <Link to="coward-volunteer">volunteer to die</Link>.</p>;
+      case 'coward-choice-0':
+        return <p>As I opened my mouth to speak, the others stepped forward and interrupted...</p>;
+
+      case 'coward-choice-1':
+        return <p>I stepped forward and <Link to="coward-volunteer">volunteered to die</Link>.</p>;
 
       case 'coward-all-volunteered':
-        return <p>The lady silenced us, and pulled out a bottle of pills. "You are all very brave, but since we cannot settle this... each of you will <Link to="coward-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
+        return <p>The lady silenced us, and pulled out a bottle of pills. "You are all very brave, but since we cannot settle this... each of you will <Link to="coward-pill">take one</Link>," she declared. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'coward-pill':
         var responses = [
@@ -613,6 +709,12 @@ var StoryMixin = {
             } else {
               storyboxes[box].setText(this.storyText(box, 'selfish-choice-1'));
             }
+          } else if (choice === 'coward-choice') {
+            if (box === 0) {
+              storyboxes[0].setText(this.storyText(0, 'coward-choice-0'));
+            } else {
+              storyboxes[box].setText(this.storyText(box, 'coward-choice-1'));
+            }
           } else {
             storyboxes[box].setText(this.storyText(box, choice));
           }
@@ -673,6 +775,17 @@ var StoryMixin = {
         storyboxes.slice(1, 9).forEach((box) => box.reanimate());
         break;
 
+      case 'TITLE_COVER':
+        storyboxes.forEach((box, index) => {
+          box.setActive(true);
+          if (index !== 0) {
+            box.setAsleep(true);
+          }
+          box.setText(this.storyText(index, 'title-cover-' + index));
+        });
+        storyboxes[5].die();
+        break;
+
       case 'TESTING_ONLY':
         this.setState({
           gender: 'M',
@@ -705,22 +818,22 @@ var StoryMixin = {
 
   checkPills: function() {
     if (++this._pills === 6) {
-      setTimeout(() => this.proceedStory(0, 'pills-taken'), 500);
+      setTimeout(() => this.proceedStory(0, 'pills-taken'), 1000);
     }
   },
 
   checkRefusals: function() {
     if (++this._refusals === 5) {
       this.stillAlive().forEach((box) => {
-        setTimeout(() => this.proceedStory(box, 'selfish-all-refused'), 500);
+        setTimeout(() => this.proceedStory(box, 'selfish-all-refused'), 1000);
       });
     }
   },
 
   checkVolunteers: function() {
-    if (++this._volunteers === 6) {
+    if (++this._volunteers === 5) {
       this.stillAlive().forEach((box) => {
-        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 500);
+        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 1000);
       });
     }
   },
