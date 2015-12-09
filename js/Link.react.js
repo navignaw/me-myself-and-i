@@ -9,6 +9,7 @@ var Link = React.createClass({
   propTypes: {
     children: React.PropTypes.node.isRequired,
     onClick: React.PropTypes.func.isRequired,
+    disabled: React.PropTypes.bool,
   },
 
   getInitialState: function() {
@@ -29,7 +30,10 @@ var Link = React.createClass({
   render: function() {
     return (
       <a
-        className={cx('story-link', {'disabled': this.state.clicked})}
+        className={cx('story-link', {
+          'disabled': this.state.clicked,
+          'gray': this.props.disabled,
+        })}
         onClick={this._onClick}>
         {this.props.children}
       </a>
@@ -42,11 +46,12 @@ var LinkFactory = function(onClick, id) {
     propTypes: {
       children: React.PropTypes.node.isRequired,
       to: React.PropTypes.string.isRequired,
+      disabled: React.PropTypes.bool,
     },
 
     render: function() {
       return (
-        <Link onClick={onClick.bind(null, id, this.props.to)}>
+        <Link onClick={onClick.bind(null, id, this.props.to)} disabled={this.props.disabled}>
           {this.props.children}
         </Link>
       );

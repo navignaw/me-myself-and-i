@@ -46,12 +46,6 @@ var CHOICES = {
     return choices;
   },
 
-  lifeReasons: {
-    'I was just lucky.': 'lucky',
-    'I was number One. I deserved it.': 'selfish',
-    'I was a coward.': 'coward',
-  },
-
   endingChoice: {
     'I wash the number off in the river.': 'cleanse',
     'I keep the number.': 'keep',
@@ -72,7 +66,6 @@ var StoryMixin = {
       selfless: 0,
       asleep: [2, 3, 4, 5, 6, 7, 8],
       dead: [],
-      lifeReason: null,
       unlockedEndings: [],
     };
   },
@@ -93,7 +86,7 @@ var StoryMixin = {
             <br />
             <h4><Link to="start">Start</Link></h4>
             <h4><Link to="credits">Credits</Link></h4>
-            {/*testing || cover*/ null}
+            {testing /*|| cover null*/}
           </div>
         );
 
@@ -310,66 +303,91 @@ var StoryMixin = {
         return <p>I watched them grab {this.getSecondDead()} and followed them. The last thing I heard was {this.genderPossessive()} screams before all went dark.</p>;
 
       case 'death7':
-        return <p>And then, <Link to="ribbit1">just yesterday</Link>, we were assembled into a room...</p>;
+        return <p>And then, <Link to="wolves1">just yesterday</Link>, we were assembled into a room...</p>;
 
-      case 'ribbit1':
-        return <p>A ribbit jolts me out of the past. Shaking, I turn to see a frog leap into the river, only to be <Link to="ribbit2">seized</Link> by the claws of a large bird.</p>;
+      case 'wolves1':
+        return <p>A howl jolts me out of the past. Shaking, I turn to see a <Link to="wolves2">pack of wolves</Link> encircling a terrified deer across the river.</p>;
 
-      case 'ribbit2':
-        return <p>Life, extinguished just like that. Why am I the lone survivor? <Link to="why">Why do I live on</Link>, while the others are snatched away by the claws of death?</p>;
+      case 'wolves2-group':
+        return <p>I admire the collective effort of the pack to surround and capture its <Link to="wolves3">prey</Link>.</p>;
 
-      case 'why':
-        return (
-          <div>
-            <p>I tell myself again:</p>
-            <Choice newLines={true} of={CHOICES.lifeReasons} to="life-reasons" />
-          </div>
-        );
+      case 'wolves2-lone':
+        return <p>I admire the dominance the alpha male holds as it runs in before the others to give the <Link to="wolves3">killing blow</Link>.</p>;
 
-      case 'lucky':
-        return <p>After all, we had the same chance of survival, back in that <Link to="end1">grim room</Link>...</p>;
+      case 'wolves3':
+        return <p>The deer falls, and the wolves begin their feast. I find myself <Choice of={{'feeling sorry for the deer': false, 'egging the wolves on': true}} to="wolves4" />.</p>;
 
-      case 'selfish':
-        return <p>After all, wasn't one the greatest? The original? The others were copies. It was only inevitable, back in that <Link to="end1">grim room</Link>...</p>;
+      case 'wolves4-selfless':
+        return <p><Choice of={{'After all, life was too precious to give away freely.': -1, 'After all, its life was sacrificed for others to live: a noble end.': 1}} to="wolves5" newLines={true} /></p>;
 
-      case 'coward':
-        return <p>Even though they chose their own fates... I should have said something, back in that <Link to="end1">grim room</Link>...</p>;
+      case 'wolves4-selfish':
+        return <p><Choice of={{'After all, they were simply following the code of nature: kill to survive.': -1, 'After all, they were stronger and simply deserved to win.': -1}} to="wolves5" newLines={true} /></p>;
 
-      case 'end1':
-        return <p>I was led into a small room.</p>;
+      case 'wolves5':
+        return <p>As the wolves finish their meal and lope away, I stare at the carcass of the dead animal. Another life, snuffed out like a candle. Just like the others, back in that <Link to="end1">grim room</Link>...</p>;
 
-      case 'end2':
-        return <p>A lady explained to me that their funding had run out,</p>;
+      case 'end1-0':
+        return <p>I was led into a small room. I stood with the rest of the group, arms crossed, <Link to="end2">waiting</Link>.</p>;
+      case 'end1-1':
+        return <p>I was led into a small room. I stood with the rest of the group, hands in my pocket, waiting.</p>;
+      case 'end1-2':
+        return <p>I was led into a small room. I stood with the rest of the group, leaning against the wall, waiting.</p>;
+      case 'end1-3':
+        return <p>I was led into a small room. I stood with the rest of the group, tapping my foot, waiting.</p>;
+      case 'end1-4':
+        return <p>I was led into a small room. I stood with the rest of the group, looking around, waiting.</p>;
+      case 'end1-5':
+        return <p>I was led into a small room. I stood with the rest of the group, lost in thought, waiting.</p>;
 
-      case 'end3':
-        return <p>and that we could no longer continue the way we used to.</p>;
+      case 'end2-0':
+        return <p>"Thank you for your patience," a voice droned over the loudspeaker.</p>;
+      case 'end2-1':
+        return <p>"It's been a pleasure seeing you grow together. But all good things must come to an end."</p>;
+      case 'end2-2':
+        return <p>"Starting tomorrow, this project is shutting down due to a lack of funding... and all of you will be put to nice, long sleep."</p>;
+      case 'end2-3':
+        return <p>"All but one of you, that is."</p>;
+      case 'end2-4':
+        return <p>"We felt that all of you deserved the same opportunity to live, and so we're giving you a choice."</p>;
+      case 'end2-5':
+        return <p>"Please decide which one of you will live... and which 5 will <Link to="end3">die</Link>."</p>;
 
-      case 'end4-0':
-        return <p>Well, all but <Link to="end5">one of us</Link>...</p>;
-
-      case 'end4-1':
-        return <p>Well, all but one of us...</p>;
-
-      case 'end5-0':
-        return <p>We were given a choice. We could select <Link to="end6">one of us</Link> who would survive... and the rest would be "put to a nice, long sleep."</p>;
-
-      case 'end5-1':
-        return <p>We were given a choice. We could select one of us who would survive... and the rest would be "put to a nice, long sleep."</p>;
-
-      case 'end6-0':
+      case 'end3-brave':
         return (
           <div>
             <p>There was a long silence. Then I opened my mouth to speak:</p>
-            <Choice newLines={true} of={this.getFinalChoice()} to="decision" />
+            <Link to="decision-brave">Let me sacrifice myself, so the others may survive.</Link>
+            <Link disabled={true} to="">The only honorable way is to leave it up to luck.</Link>
+            <Link disabled={true} to="">I, more than anyone else, deserve to live.</Link>
           </div>
         );
 
-      case 'end6-1':
+      case 'end3-lucky':
+        return (
+          <div>
+            <p>There was a long silence. Then I opened my mouth to speak:</p>
+            <Link disabled={true} to="">Let me sacrifice myself, so the others may survive.</Link>
+            <Link to="decision-lucky">The only honorable way is to leave it up to luck.</Link>
+            <Link disabled={true} to="">I, more than anyone else, deserve to live.</Link>
+          </div>
+        );
+
+      case 'end3-selfish':
+        return (
+          <div>
+            <p>There was a long silence. Then I opened my mouth to speak:</p>
+            <p><Link disabled={true} to="">Let me sacrifice myself, so the others may survive.</Link></p>
+            <p><Link disabled={true} to="">The only honorable way is to leave it up to luck.</Link></p>
+            <p><Link to="decision-selfish">I, more than anyone else, deserve to live.</Link></p>
+          </div>
+        );
+
+      case 'end3-1':
         return <p>There was a long silence.</p>;
 
       /* LUCK BRANCH */
       case 'lucky-choice':
-        return <p>The lady nodded, and pulled out a bottle of pills. "Each of you will <Link to="lucky-pill">take one</Link>," she said. "You will be put to sleep-- and exactly one of you will wake."</p>;
+        return <p>The loudspeaker clicked, and a bottle of pills dropped into the room. "Each of you will <Link to="lucky-pill">take one</Link>," the voice said. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'lucky-pill-0':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was if I would see tomorrow.</p>;
@@ -412,7 +430,7 @@ var StoryMixin = {
         return <p>I protested loudly, demanding a fairer decision.</p>;
 
       case 'selfish-all-refused':
-        return <p>The lady silenced us, and pulled out a bottle of pills. "Since we cannot settle this in a civilized manner... each of you will <Link to="selfish-pill">take one</Link>," she demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
+        return <p>The loudspeaker clicked, and a bottle of pills dropped into the room. "Since we cannot settle this in a civilized manner... each of you will <Link to="selfish-pill">take one</Link>," the voice demanded. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
       case 'selfish-pill-0':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' betrayal.</p>;
@@ -432,32 +450,32 @@ var StoryMixin = {
       case 'selfish-pill-5':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friend's selfishness.</p>;
 
-      /* COWARD BRANCH */
-      case 'coward-choice-0':
+      /* BRAVE BRANCH */
+      case 'brave-choice-0':
         return <p>As I opened my mouth to speak, the others stepped forward and interrupted...</p>;
 
-      case 'coward-choice-1':
-        return <p>I stepped forward and <Link to="coward-volunteer">volunteered to die</Link>.</p>;
+      case 'brave-choice-1':
+        return <p>I stepped forward and <Link to="brave-volunteer">volunteered to die</Link>.</p>;
 
-      case 'coward-all-volunteered':
-        return <p>The lady silenced us, and pulled out a bottle of pills. "You are all very brave, but since we cannot settle this... each of you will <Link to="coward-pill">take one</Link>," she declared. "You will be put to sleep-- and exactly one of you will wake."</p>;
+      case 'brave-all-volunteered':
+        return <p>The loudspeaker clicked, and a bottle of pills dropped into the room. "You are all very brave, but since we cannot settle this... each of you will <Link to="brave-pill">take one</Link>," the voice declared. "You will be put to sleep-- and exactly one of you will wake."</p>;
 
-      case 'coward-pill-0':
+      case 'brave-pill-0':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' bravery.</p>;
 
-      case 'coward-pill-1':
+      case 'brave-pill-1':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' courage.</p>;
 
-      case 'coward-pill-2':
+      case 'brave-pill-2':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of my friends' support.</p>;
 
-      case 'coward-pill-3':
+      case 'brave-pill-3':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of our refusal to let each other die.</p>;
 
-      case 'coward-pill-4':
+      case 'brave-pill-4':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of our bond.</p>;
 
-      case 'coward-pill-5':
+      case 'brave-pill-5':
         return <p>I swallowed the pill and darkness swallowed me. My last thought was of our connection.</p>;
 
       /* SURVIVED ENDING */
@@ -468,39 +486,18 @@ var StoryMixin = {
         return <p>Reflected in the rippling current is a familiar face. Lips stuck in a permanent grimace. Glassy eyes, somewhere far in the distance. But as usual, I am drawn to the <Link to="survived3">red ink</Link> scrawled on my forehead.</p>;
 
       case 'survived3':
-        return <p>One. That was the number I was <Link to="survived4">assigned</Link>.</p>;
+        return <p>One. That was the number I was assigned. But what does my label <Link to="survived4">matter</Link> anymore?</p>;
 
       case 'survived4':
-        return <p><Link to="survived5">What was it they told me?</Link></p>;
+        return <p>I'm <Link to="survived5">alive</Link> and here, yet at the same time, <Link to="survived5">dead</Link> in eight different places.</p>;
 
-      case 'reveal1':
-        return <p>You are {this.getAdjective()}, child.</p>;
+      case 'survived5':
+        return <p>How was it that I survived when I should have died? A <Link to="survived6">stroke of luck</Link>? A <Link to="survived6">miracle</Link>? Or was it my <Link to="survived6">birthright</Link>?</p>;
 
-      case 'reveal2':
-        return <p>You are number one!</p>;
-
-      case 'reveal3':
-        return <p>But... well, actually, I'll let you in on a <Link to="reveal4">secret</Link>.</p>;
-
-      case 'reveal4':
-        return <p>The truth is, you were all mixed up as babies...</p>;
-
-      case 'reveal5':
-        return <p>In fact, there was no way to tell which of you was the original.</p>;
-
-      case 'reveal6':
-        return <p>So we ended up just labelling you randomly! How <Link to="reveal7">funny</Link> is that?</p>;
-
-      case 'reveal7':
-        return <p>Funny. Life is funny. I'm alive and here, yet at the same time, dead in eight different places.</p>;
-
-      case 'reveal8':
-        return <p>Yet... one of us was always guaranteed to survive, and so I would always have <Link to="reveal9">lived on</Link>.</p>;
-
-      case 'reveal9':
+      case 'survived6':
         return (
           <div>
-            <p>The sun shines, and life goes on. I glance one more time at the red ink on my forehead.</p>
+            <p>No matter. The sun shines, and life goes on. I glance again at the red ink on my forehead.</p>;
             <Choice newLines={true} of={CHOICES.endingChoice} to="ending" />
           </div>
         );
@@ -595,7 +592,7 @@ var StoryMixin = {
         if (this._numActive < 9) {
           storyboxes[0].setText(this.storyText(0, 'wakeup-1'));
         } else {
-          if (this.state.collective >= 0) {
+          if (this.state.collective > 0) {
             storyboxes[0].setText(this.storyText(0, 'wakeup-group-0'));
             storyboxes[1].setText(this.storyText(1, 'wakeup-group-0'));
             [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-group-1')));
@@ -645,63 +642,87 @@ var StoryMixin = {
         setTimeout(() => this.proceedStory(0, 'death7'), 2500);
         break;
 
-      case 'life-reasons':
-        this.setState({lifeReason: choice});
-        storyboxes[0].setText(this.storyText(0, choice));
+      case 'wolves2':
+        if (this.state.collective > 0) {
+          storyboxes[0].setText(this.storyText(0, 'wolves2-group'));
+        } else {
+          storyboxes[0].setText(this.storyText(0, 'wolves2-lone'));
+        }
+        break;
+
+      case 'wolves4':
+        if (choice) {
+          storyboxes[0].appendText(this.storyText(0, 'wolves4-selfish'));
+        } else {
+          storyboxes[0].appendText(this.storyText(0, 'wolves4-selfless'));
+        }
+        break;
+
+      case 'wolves5':
+        this.setState({selfless: choice});
+        storyboxes[0].setText(this.storyText(0, 'wolves5'));
         break;
 
       case 'end1':
-        this.stillAlive().forEach((box) => {
+        this.stillAlive().forEach((box, idx) => {
           storyboxes[box].setAsleep(false);
-          setTimeout(() => storyboxes[box].setText(this.storyText(box, 'end2')), 500);
-          setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end3')), 2500);
-          if (box === 0) {
-            setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end4-0')), 4500);
-          } else {
-            setTimeout(() => storyboxes[box].appendText(this.storyText(box, 'end4-1')), 4500);
-          }
+          storyboxes[box].setText(this.storyText(box, 'end1-' + idx.toString()));
         });
         break;
 
-      case 'end5':
+      case 'end2':
+        this.stillAlive().forEach((box, idx) => {
+          storyboxes[box].clearText();
+          setTimeout(() => storyboxes[box].setText(this.storyText(box, 'end2-' + idx.toString())), idx * 3000);
+        });
+        break;
+
+      case 'end3':
         this.stillAlive().forEach((box) => {
           if (box === 0) {
-            storyboxes[box].setText(this.storyText(box, 'end5-0'));
-          } else {
-            storyboxes[box].setText(this.storyText(box, 'end5-1'));
-          }
-        });
-        break;
+            if (this.state.collective > 0 && this.state.selfless > 0) {
 
-      case 'end6':
-        this.stillAlive().forEach((box) => {
-          if (box === 0) {
-            storyboxes[box].setText(this.storyText(box, 'end6-0'));
-          } else {
-            storyboxes[box].setText(this.storyText(box, 'end6-1'));
-          }
-        });
-        break;
-
-      case 'decision':
-        this.stillAlive().forEach((box, index) => {
-          if (choice === 'selfish-choice') {
-            storyboxes[box].setText(this.storyText(box, choice + '-' + index.toString()));
-          } else if (choice === 'coward-choice') {
-            if (box === 0) {
-              storyboxes[0].setText(this.storyText(0, 'coward-choice-0'));
+              storyboxes[box].setText(this.storyText(box, 'end3-brave'));
+            } else if (this.state.collective < 0 && this.state.selfless > 0) {
+              storyboxes[box].setText(this.storyText(box, 'end3-lucky'));
             } else {
-              storyboxes[box].setText(this.storyText(box, 'coward-choice-1'));
+              storyboxes[box].setText(this.storyText(box, 'end3-selfish'));
             }
           } else {
-            storyboxes[box].setText(this.storyText(box, choice));
+            storyboxes[box].setText(this.storyText(box, 'end3-1'));
+          }
+        });
+        break;
+
+      case 'decision-brave':
+        this.stillAlive().forEach((box, index) => {
+          if (box === 0) {
+            storyboxes[0].setText(this.storyText(0, 'brave-choice-0'));
+          } else {
+            storyboxes[box].setText(this.storyText(box, 'brave-choice-1'));
+          }
+        });
+        break;
+
+      case 'decision-lucky':
+        this.stillAlive().forEach((box, index) => {
+          storyboxes[box].setText(this.storyText(box, 'lucky-choice'));
+        });
+        break;
+
+      case 'decision-selfish':
+        this.stillAlive().forEach((box, index) => {
+          if (box === 0) {
+            storyboxes[0].setText(this.storyText(0, 'selfish-choice-0'));
+          } else {
+            storyboxes[box].setText(this.storyText(box, 'selfish-choice-1'));
           }
         });
         break;
 
       case 'lucky-pill':
       case 'selfish-pill':
-      case 'coward-pill':
+      case 'brave-pill':
         storyboxes[id].setText(this.storyText(id, to + '-' + this._pills.toString()));
         this.checkPills();
         break;
@@ -721,25 +742,8 @@ var StoryMixin = {
         this.checkRefusals();
         break;
 
-      case 'coward-volunteer':
+      case 'brave-volunteer':
         this.checkVolunteers();
-        break;
-
-      case 'survived5':
-        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal1')), 500);
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal2')), 2500);
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal3')), 4500);
-        break;
-
-      case 'reveal4':
-        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal4')), 500);
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal5')), 4000);
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal6')), 8000);
-        break;
-
-      case 'reveal7':
-        setTimeout(() => storyboxes[0].setText(this.storyText(0, 'reveal7')), 500);
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'reveal8')), 5000);
         break;
 
       case 'ending':
@@ -767,10 +771,7 @@ var StoryMixin = {
       case 'TESTING_ONLY':
         this.setState({
           gender: 'M',
-          faveCategory: 'food',
-          faveItem: 'burgers',
           dead: [2, 3, 9],
-          lifeReason: 'coward',
         });
         storyboxes.forEach((box, index) => {
           box.clearText();
@@ -815,7 +816,7 @@ var StoryMixin = {
   checkVolunteers: function() {
     if (++this._volunteers === 5) {
       this.stillAlive().forEach((box) => {
-        setTimeout(() => this.proceedStory(box, 'coward-all-volunteered'), 1000);
+        setTimeout(() => this.proceedStory(box, 'brave-all-volunteered'), 1000);
       });
     }
   },
@@ -869,36 +870,10 @@ var StoryMixin = {
     return '';
   },
 
-  getAdjective: function() {
-    if (this.state.lifeReason === 'lucky') {
-      return 'lucky';
-    } else if (this.state.lifeReason === 'selfish') {
-      return 'special';
-    } else {
-      return 'brave';
-    }
-  },
-
   stillAlive: function() {
     return [0, 1, 2, 3, 4, 5, 6, 7, 8].filter((elem) =>
       this.state.dead.indexOf(elem) === -1
     );
-  },
-
-  getFinalChoice: function() {
-    if (this.state.lifeReason === 'lucky') {
-      return {
-        'We will leave it to luck.': 'lucky-choice',
-      };
-    } else if (this.state.lifeReason === 'selfish') {
-      return {
-        'I am One. The original. I should be the one to live.': 'selfish-choice',
-      };
-    } else {
-      return {
-        'I will die, so another can live.': 'coward-choice',
-      };
-    }
   },
 
   resetState: function() {
