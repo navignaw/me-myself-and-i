@@ -7,31 +7,43 @@ var CHOICES = {
     boy: 'M',
     girl: 'F'
   },
-  faveCategory: {
-    food: 'food',
-    color: 'color',
-    sport: 'sport',
-  },
-  food: {
-    burgers: 'burgers',
-    'ice cream': 'ice cream',
-    ramen: 'ramen',
-    steak: 'steak',
-  },
-  color: {
-    red: 'red',
-    orange: 'orange',
-    yellow: 'yellow',
-    green: 'green',
-    blue: 'blue',
-    purple: 'purple',
-  },
-  sport: {
-    basketball: 'basketball',
-    baseball: 'baseball',
-    soccer: 'soccer',
-    football: 'football',
-    tennis: 'tennis',
+
+  reactions: function(collective, object, possessive) {
+    var choices = {};
+    if (collective >= -2 && collective <= 1) {
+      choices['I scowled at ' + object + '.'] = -1;
+    }
+    if (collective >= -2 && collective <= 2) {
+      choices['I nodded at ' + object + '.'] = 0;
+    }
+    if (collective >= -1 && collective <= 2) {
+      choices['I smiled at ' + object + '.'] = 1;
+    }
+    if (collective >= 1 && collective <= 3) {
+      choices['I grinned at ' + object + '.'] = 1;
+    }
+    if (collective >= 1 && collective <= 3) {
+      choices['I waved cheerfully at ' + object + '.'] = 1;
+    }
+    if (collective >= -3 && collective <= -1) {
+      choices['I stared suspiciously at ' + object + '.'] = -1;
+    }
+    if (collective >= -3 && collective <= -1) {
+      choices['I shook my head at ' + object + '.'] = -1;
+    }
+    if (collective >= 3 && collective <= 5) {
+      choices['I greeted ' + object + ' with warmth.'] = 2;
+    }
+    if (collective >= 5) {
+      choices['Feeling a connection, I grasped ' + possessive + ' hand and smiled warmly.'] = 3;
+    }
+    if (collective >= -5 && collective <= -3) {
+      choices['I bared my teeth at ' + object + '.'] = -2;
+    }
+    if (collective <= -5) {
+      choices['Feeling only coldness, I stared at ' + object + ' and smiled coldly.'] = -3;
+    }
+    return choices;
   },
 
   lifeReasons: {
@@ -48,6 +60,7 @@ var CHOICES = {
 
 var StoryMixin = {
   _numActive: 1,
+  _firstGreeting: '',
   _pills: 0,
   _refusals: 0,
   _volunteers: 0,
@@ -55,8 +68,9 @@ var StoryMixin = {
   getInitialState: function() {
     return {
       gender: null,
-      faveCategory: null,
-      faveItem: null,
+      collective: 0,
+      selfless: 0,
+      asleep: [2, 3, 4, 5, 6, 7, 8],
       dead: [],
       lifeReason: null,
       unlockedEndings: [],
@@ -173,18 +187,17 @@ var StoryMixin = {
           </div>
         );
 
-      case 'start':
-        return <p>I awaken in a grassy field to the glare of sunlight and a throbbing headache. Rubbing my temples, I crawl to the nearby stream to splash my face. A blank-eyed <Choice of={CHOICES.gender} to="gender" /> stares back at me.</p>;
-
       case 'credits':
         return (
           <div className="credits text-center">
             <h4>Story & Design: Ivan Wang (one)</h4>
             <h4>Programming: Ivan Wang (two)</h4>
-            <h4>Testing: Archit Amal Sahay</h4>
             <h4><Link to="menu">Back</Link></h4>
           </div>
         );
+
+      case 'start':
+        return <p>I awaken in a grassy field to the glare of sunlight and a throbbing headache. Rubbing my temples, I crawl to the nearby stream to splash my face. A blank-eyed <Choice of={CHOICES.gender} to="gender" /> stares back at me.</p>;
 
       case 'river1':
         return <p>Reflected in the rippling current is a familiar face. Lips stuck in a permanent grimace. Glassy eyes, somewhere far in the distance. But as usual, I am drawn to the <Link to="river2">red ink</Link> scrawled on my forehead.</p>;
@@ -193,37 +206,32 @@ var StoryMixin = {
         return <p>One. That was the number I was assigned. We were all, once. All <Link to="river3">nine of us</Link>...</p>;
 
       case 'river3':
-        return <p>Yes, back then, we were a gang. <Link to="meeting1">Together, inseparable.</Link> Life was different then.</p>;
+        return <p>Yes, back then, we were a gang. Life was <Link to="meeting1">different</Link> then.</p>;
 
       case 'meeting1':
-        return <p>I first met Two, napping in the library. There was something familiar about {this.genderObject()}, something that called to me, <Link to="meeting2">drawing my attention</Link>.</p>;
+        return <p>I first met Two in the infirmary, resting against a wall. There was something familiar about {this.genderObject()}, something that called to me, <Link to="meeting2">drawing my attention</Link>.</p>;
 
       case 'meeting2':
-        return <p>I walked over, curious. Two, sensing my presence, <Link to="meeting3">opened {this.genderPossessive()} eyes</Link>.</p>;
+        return <p>I walked over, curious. Two, sensing my presence, <Link to="meeting3">turned to me</Link>.</p>;
 
       case 'meeting3-0':
-        return (
-          <div>
-            <p>{this.genderSubject().capitalize()} sat up and gazed at me.</p>
-            <p><Link to="meeting4">I waved at {this.genderObject()}.</Link></p>
-          </div>
-        );
+        return <p>I <Choice of={{nodded: 'nodded', waved: 'waved', smiled: 'smiled'}} to="meeting4" /> at {this.genderObject()}.</p>;
 
       case 'meeting3-1':
-        return <p>Sensing a presence, I sat up and gazed at {this.genderObject()}.</p>;
+        return <p>Sensing someone nearby, I turned to see a {this.genderBoyGirl()}, staring curiously at me.</p>;
 
       case 'meeting4-1':
         return (
           <div>
-            <p>{this.genderSubject().capitalize()} waved at me.</p>
-            <p><Link to="meeting5">I waved back.</Link></p>
+            <p>{this.genderSubject().capitalize()} {this._firstGreeting} at me.</p>
+            <p><Link to="meeting5">I {this._firstGreeting} back.</Link></p>
           </div>
         );
 
       case 'meeting5-0':
         return (
           <div>
-            <p>{this.genderSubject().capitalize()} waved back.</p>
+            <p>{this.genderSubject().capitalize()} {this._firstGreeting} back.</p>
             <p><Link to="meeting6">"I'm One," I told {this.genderObject()}.</Link></p>
           </div>
         );
@@ -240,54 +248,47 @@ var StoryMixin = {
         return <p>"Two," {this.genderSubject()} replied.</p>;
 
       case 'meeting8-0':
-        return <p>I told {this.genderObject()} my favorite <Choice of={CHOICES.faveCategory} to="fave1" /></p>;
+        return <p>"Watching something?" I gazed past {this.genderObject()} into the room.</p>;
 
-      case 'meeting9-0':
-        return <p>was <Choice of={CHOICES[this.state.faveCategory]} to="fave2" />,</p>;
+      case 'meeting8-1':
+        return <p>I returned my gaze to the <Link to="meeting9">rows of beds</Link> before me.</p>;
+
+      case 'meeting9-1':
+        return <p>"We're not the only ones, you know. There are <Link to="meeting10">others</Link>."</p>;
 
       case 'meeting10-0':
-        return <p>and it turned out {this.genderPossessive2()} was the same!</p>;
+        return <p>Walking over to the neatly arranged beds, I discovered figures sleeping peacefully under clean white sheets. Each bed was labelled with a number: <Choice of={{3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8}} to="wakeup" />.</p>;
 
-      case 'meeting10-1':
-        return <p>{this.genderSubject().capitalize()} told me {this.genderObject()} favorite {this.state.faveCategory} was {this.state.faveItem}, and it turned out mine was the same!</p>;
+      case 'wakeup-0':
+        return <p>As I approached, the {this.genderBoyGirl()} opened {this.genderPossessive()} eyes.</p>;
 
-      case 'meeting11':
-        return <p>Our friendship clicked,</p>;
+      case 'wakeup-i':
+        return (
+          <div>
+            <p>Sensing a presence, I opened my eyes.</p>
+            <p><Choice of={CHOICES.reactions(this.state.collective, this.genderObject(), this.genderPossessive())} to="wakeup-1" newLines={true}/></p>
+          </div>
+        );
 
-      case 'meeting12':
-        return <p>and we set off with a spring in our steps.</p>;
+      case 'wakeup-1':
+        return <p>I returned to the edge of the neatly arranged beds. Each one was labelled with a number: <Choice of={this.allAsleep()} to="wakeup" /></p>;
 
-      case 'intros-0':
-        return <p>The next day, I met <Link to="intros-3">Four</Link> in the kitchen.</p>;
+      case 'wakeup-group-0':
+        return <p>As the others got up and joined me, I felt a strange bond, an innate <Link to="wakeup-end">camaraderie</Link>.</p>;
 
-      case 'intros-1':
-        return <p>The next day, I met <Link to="intros-8">Nine</Link> in the hallway.</p>;
+      case 'wakeup-group-1':
+        return <p>I got up and walked over to meet the rest of the group.</p>;
 
-      case 'intros-3':
-        return <p>One and I shared laughs over drinks and snacks.</p>;
+      case 'wakeup-lone-0':
+        return <p>As the others got up, I felt a strange detachment from the rest of the <Link to="wakeup-end">group</Link>.</p>;
 
-      case 'intros-3-2':
-        return <p>I hung out with <Link to="intros-2">Three</Link>, <Link to="intros-5">Six</Link>, and <Link to="intros-6">Seven</Link> at the park.</p>;
+      case 'wakeup-lone-1':
+        return <p>I got up and walked to the edge of the room, staying apart from the others.</p>;
 
-      case 'intros-8':
-        return <p>Two and I were headed to the same room.</p>;
+      case 'wakeup-end':
+        return <p>My first meeting with the others set the tone for the <Link to="wakeup-end2">rest of our days</Link>.</p>;
 
-      case 'intros-8-2':
-        return <p><Link to="intros-4">Five</Link> convinced me to play in the sheep pen.</p>;
-
-      case 'intros-park':
-        return <p>We {this.getParkActivity()}, and chatted the whole evening.</p>;
-
-      case 'intros-4':
-        return <p>Nine and I cornered two sheep, while <Link to="intros-7">Eight</Link> watched.</p>;
-
-      case 'intros-7':
-        return <p>Five tripped spectacularly and Nine and I laughed as the sheep fled.</p>;
-
-      case 'intros-done':
-        return <p><Link to="friends">friends</Link>.</p>;
-
-      case 'friends':
+      case 'wakeup-end2':
         return <p><Link to="death1">But it didn't last.</Link></p>;
 
       case 'death1':
@@ -549,7 +550,8 @@ var StoryMixin = {
         break;
 
       case 'meeting4':
-        storyboxes[1].appendText(this.storyText(1, 'meeting4-1'));
+        this._firstGreeting = choice;
+        storyboxes[1].setText(this.storyText(1, 'meeting4-1'));
         break;
 
       case 'meeting5':
@@ -567,94 +569,47 @@ var StoryMixin = {
 
       case 'meeting8':
         storyboxes[0].setText(this.storyText(0, 'meeting8-0'));
-        storyboxes[1].clearText();
+        storyboxes[1].setText(this.storyText(1, 'meeting8-1'));
         break;
 
-      case 'fave1':
-        this.setState({faveCategory: choice});
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'meeting9-0')), 200);
+      case 'meeting9':
+        storyboxes[1].appendText(this.storyText(1, 'meeting9-1'));
         break;
 
-      case 'fave2':
-        this.setState({faveItem: choice});
-        setTimeout(() => {
-          storyboxes[0].appendText(this.storyText(0, 'meeting10-0'));
-          storyboxes[1].appendText(this.storyText(1, 'meeting10-1'));
-        }, 200);
-        setTimeout(() => {
-          storyboxes[0].setText(this.storyText(0, 'meeting11'));
-          storyboxes[1].setText(this.storyText(1, 'meeting11'));
-        }, 4000);
-        setTimeout(() => {
-          storyboxes[0].appendText(this.storyText(0, 'meeting12'));
-          storyboxes[1].appendText(this.storyText(1, 'meeting12'));
-        }, 5000);
-        setTimeout(() => {
-          storyboxes[0].setText(this.storyText(0, 'intros-0'));
-          storyboxes[1].setText(this.storyText(1, 'intros-1'));
-        }, 10000);
+      case 'meeting10':
+        storyboxes[0].setText(this.storyText(0, 'meeting10-0'));
         break;
 
-      case 'intros-3':
-        storyboxes[3].setActive();
-        storyboxes[3].setText(this.storyText(3, 'intros-3'));
-        setTimeout(() => storyboxes[3].appendText(this.storyText(3, 'intros-3-2')), 1500);
-        this._numActive++;
-        break;
-      case 'intros-8':
-        storyboxes[8].setActive();
-        storyboxes[8].setText(this.storyText(8, 'intros-8'));
-        setTimeout(() => storyboxes[8].appendText(this.storyText(8, 'intros-8-2')), 2000);
+      case 'wakeup':
+        storyboxes[0].setText(this.storyText(0, 'wakeup-0'));
+        storyboxes[choice].setActive();
+        storyboxes[choice].setText(this.storyText(choice, 'wakeup-i'));
+        var asleep = this.state.asleep;
+        asleep.splice(asleep.indexOf(choice), 1); // remove asleep
+        this.setState({asleep: asleep});
         this._numActive++;
         break;
 
-      case 'intros-2':
-        storyboxes[2].setActive();
-        storyboxes[2].setText(this.storyText(2, 'intros-park'));
-        this._numActive++;
-        this.checkAllAlive();
-        break;
-      case 'intros-5':
-        storyboxes[5].setActive();
-        storyboxes[5].setText(this.storyText(5, 'intros-park'));
-        this._numActive++;
-        this.checkAllAlive();
-        break;
-      case 'intros-6':
-        storyboxes[6].setActive();
-        storyboxes[6].setText(this.storyText(6, 'intros-park'));
-        this._numActive++;
-        this.checkAllAlive();
+      case 'wakeup-1':
+        this.setState({collective: this.state.collective + choice});
+        if (this._numActive < 9) {
+          storyboxes[0].setText(this.storyText(0, 'wakeup-1'));
+        } else {
+          if (this.state.collective >= 0) {
+            storyboxes[0].setText(this.storyText(0, 'wakeup-group-0'));
+            storyboxes[1].setText(this.storyText(1, 'wakeup-group-0'));
+            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-group-1')));
+          } else {
+            storyboxes[0].setText(this.storyText(0, 'wakeup-lone-0'));
+            storyboxes[1].setText(this.storyText(1, 'wakeup-lone-0'));
+            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-lone-1')));
+          }
+        }
         break;
 
-      case 'intros-4':
-        storyboxes[4].setActive();
-        storyboxes[4].setText(this.storyText(4, 'intros-4'));
-        this._numActive++;
-        break;
-      case 'intros-7':
-        storyboxes[7].setActive();
-        storyboxes[7].setText(this.storyText(7, 'intros-7'));
-        this._numActive++;
-        this.checkAllAlive();
-        break;
-
-      case 'intros-done':
-        storyboxes.forEach((box) => box.clearText());
-        setTimeout(() => storyboxes[0].setText(<p>We joked,</p>), 100);
-        setTimeout(() => storyboxes[1].setText(<p>and laughed,</p>), 800);
-        setTimeout(() => storyboxes[2].setText(<p>and talked together;</p>), 1600);
-        setTimeout(() => storyboxes[3].setText(<p>we dueled,</p>), 3000);
-        setTimeout(() => storyboxes[4].setText(<p>and played,</p>), 3600);
-        setTimeout(() => storyboxes[5].setText(<p>and fought sometimes;</p>), 4200);
-        setTimeout(() => storyboxes[6].setText(<p>but in the end,</p>), 5000);
-        setTimeout(() => storyboxes[7].setText(<p>we were still</p>), 5500);
-        setTimeout(() => storyboxes[8].setText(this.storyText(8, 'intros-done')), 6000);
-        break;
-
-      case 'friends':
+      case 'wakeup-end':
         storyboxes.slice(1, 9).forEach((box) => box.setAsleep(true));
-        storyboxes[0].setText(this.storyText(0, 'friends'));
+        storyboxes[0].setText(this.storyText(0, 'wakeup-end'));
         break;
 
       case 'death2':
@@ -833,10 +788,14 @@ var StoryMixin = {
     }
   },
 
-  checkAllAlive: function() {
-    if (this._numActive === 9) {
-      setTimeout(() => this.proceedStory(0, 'intros-done'), 3000);
+  allAsleep: function() {
+    var choices = {};
+    for (var i = 0; i < 9; i++) {
+      if (this.state.asleep.indexOf(i) >= 0) {
+        choices[i+1] = i;
+      }
     }
+    return choices;
   },
 
   checkPills: function() {
