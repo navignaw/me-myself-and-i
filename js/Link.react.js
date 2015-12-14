@@ -19,7 +19,7 @@ var Link = React.createClass({
   },
 
   _onClick: function(id, to) {
-    if (this.state.clicked) {
+    if (this.state.clicked || this.state.disabled) {
       return;
     }
 
