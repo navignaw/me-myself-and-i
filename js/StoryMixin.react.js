@@ -34,13 +34,19 @@ var CHOICES = {
     if (collective >= 3 && collective <= 5) {
       choices['I greeted ' + object + ' with warmth.'] = 2;
     }
-    if (collective >= 5) {
+    if (collective >= 5 && collective <= 7) {
+      choices['I shook ' + possessive + ' hand warmly.'] = 2;
+    }
+    if (collective >= 7) {
       choices['Feeling a connection, I grasped ' + possessive + ' hand and smiled warmly.'] = 3;
     }
     if (collective >= -5 && collective <= -3) {
       choices['I bared my teeth at ' + object + '.'] = -2;
     }
-    if (collective <= -5) {
+    if (collective >= -7 && collective <= -5) {
+      choices['I turned away from ' + object + ' coldly.'] = -2;
+    }
+    if (collective <= -7) {
       choices['Feeling only coldness, I stared at ' + object + ' and smiled coldly.'] = -3;
     }
     return choices;
@@ -86,7 +92,7 @@ var StoryMixin = {
             <br />
             <h4><Link to="start">Start</Link></h4>
             <h4><Link to="credits">Credits</Link></h4>
-            {testing /*|| cover null*/}
+            {/*testing || cover*/ null}
           </div>
         );
 
@@ -267,15 +273,21 @@ var StoryMixin = {
         return <p>I returned to the edge of the neatly arranged beds. Each one was labelled with a number: <Choice of={this.allAsleep()} to="wakeup" /></p>;
 
       case 'wakeup-group-0':
-        return <p>As the others got up and joined me, I felt a strange bond, an innate <Link to="wakeup-end">camaraderie</Link>.</p>;
+        return <p>As the others got up and joined us, I felt a strange bond, an innate <Link to="wakeup-end">camaraderie</Link>.</p>;
 
       case 'wakeup-group-1':
+        return <p>As the others got up and joined us, I felt a strange connection, an innate camaraderie.</p>;
+
+      case 'wakeup-group-2':
         return <p>I got up and walked over to meet the rest of the group.</p>;
 
       case 'wakeup-lone-0':
         return <p>As the others got up, I felt a strange detachment from the rest of the <Link to="wakeup-end">group</Link>.</p>;
 
       case 'wakeup-lone-1':
+        return <p>As the others got up, I felt a strange separation from the rest of the group.</p>;
+
+      case 'wakeup-lone-2':
         return <p>I got up and walked to the edge of the room, staying apart from the others.</p>;
 
       case 'wakeup-end':
@@ -497,7 +509,7 @@ var StoryMixin = {
       case 'survived6':
         return (
           <div>
-            <p>No matter. The sun shines, and life goes on. I glance again at the red ink on my forehead.</p>;
+            <p>No matter. The sun shines, and life goes on. I glance again at the red ink on my forehead.</p>
             <Choice newLines={true} of={CHOICES.endingChoice} to="ending" />
           </div>
         );
@@ -594,12 +606,12 @@ var StoryMixin = {
         } else {
           if (this.state.collective > 0) {
             storyboxes[0].setText(this.storyText(0, 'wakeup-group-0'));
-            storyboxes[1].setText(this.storyText(1, 'wakeup-group-0'));
-            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-group-1')));
+            storyboxes[1].setText(this.storyText(1, 'wakeup-group-1'));
+            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-group-2')));
           } else {
             storyboxes[0].setText(this.storyText(0, 'wakeup-lone-0'));
-            storyboxes[1].setText(this.storyText(1, 'wakeup-lone-0'));
-            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-lone-1')));
+            storyboxes[1].setText(this.storyText(1, 'wakeup-lone-1'));
+            [2,3,4,5,6,7,8].forEach((box) => storyboxes[box].setText(this.storyText(box, 'wakeup-lone-2')));
           }
         }
         break;
@@ -748,7 +760,7 @@ var StoryMixin = {
 
       case 'ending':
         storyboxes[0].setText(this.storyText(0, choice));
-        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'fin')), 5000);
+        setTimeout(() => storyboxes[0].appendText(this.storyText(0, 'fin')), 3000);
         break;
 
       case 'fin':
