@@ -28,11 +28,14 @@ var Link = React.createClass({
   },
 
   render: function() {
+    if (this.props.disabled) {
+      return <p className="story-link gray">{this.props.children}</p>;
+    }
+
     return (
       <a
         className={cx('story-link', {
           'disabled': this.state.clicked,
-          'gray': this.props.disabled,
         })}
         onClick={this._onClick}>
         {this.props.children}

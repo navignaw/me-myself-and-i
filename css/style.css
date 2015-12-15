@@ -43,9 +43,10 @@ a.story-link {
 a.story-link.disabled {
   color: black;
 }
-a.story-link.gray {
+p.story-link.gray {
   color: gray;
-}.asleep a.story-link {
+}
+.asleep a.story-link {
   color: #999;
 }
 
@@ -56,7 +57,7 @@ p:hover, a.story-link.disabled:hover {
   cursor: default;
   text-decoration: none;
 }
-a.story-link.gray:hover {
+p.story-link.gray:hover {
   cursor: not-allowed;
 }
 

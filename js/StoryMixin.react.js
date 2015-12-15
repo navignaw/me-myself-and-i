@@ -893,7 +893,13 @@ var StoryMixin = {
     this._pills = 0;
     this._refusals = 0;
     this._volunteers = 0;
-    this.setState({dead: []});
+    this.setState({
+      asleep: [2, 3, 4, 5, 6, 7, 8],
+      dead: [],
+      selfless: 0,
+      collective: 0,
+      gender: null,
+    });
   },
 };
 
